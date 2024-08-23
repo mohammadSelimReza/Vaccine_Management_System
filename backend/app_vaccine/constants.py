@@ -1,11 +1,24 @@
-TARGET_PEOPLE = (
-    ('Adult', 'Adult'),
-    ('Child', 'Child'),
+VACCINE_FOR=(
+    ('adult','Adult'),
+    ('child','Child'),
 )
+VACCINE_TYPE_CHOICES = [
+    ('inactivated', 'Inactivated Vaccine'),
+    ('live_attenuated', 'Live Attenuated Vaccine'),
+    ('subunit', 'Subunit Vaccine'),
+    ('mRNA', 'mRNA Vaccine'),
+    ('viral_vector', 'Viral Vector Vaccine'),
+    ('toxoid', 'Toxoid Vaccine'),
+    ('hepatitis_b', 'Hepatitis B'),
+    ('live_attenuated', 'Live attenuated'),
+    ('recombinant', 'Recombinant'),
+    ('inactivated_toxin', 'Inactivated toxin'),
+]
+# constants.py
 
-SELECTED_DISTRICTS = (
+BANGLADESH_DISTRICTS = [
     ('Barguna', 'Barguna'),
-    ('Barisal', 'Barisal'),
+    ('Barishal', 'Barishal'),
     ('Bhola', 'Bhola'),
     ('Jhalokathi', 'Jhalokathi'),
     ('Patuakhali', 'Patuakhali'),
@@ -15,7 +28,7 @@ SELECTED_DISTRICTS = (
     ('Chandpur', 'Chandpur'),
     ('Chattogram', 'Chattogram'),
     ('Cumilla', 'Cumilla'),
-    ('Cox\'s Bazar', 'Cox\'s Bazar'),
+    ('Coxs_Bazar', 'Cox\'s Bazar'),
     ('Feni', 'Feni'),
     ('Khagrachari', 'Khagrachari'),
     ('Lakshmipur', 'Lakshmipur'),
@@ -52,6 +65,7 @@ SELECTED_DISTRICTS = (
     ('Joypurhat', 'Joypurhat'),
     ('Naogaon', 'Naogaon'),
     ('Natore', 'Natore'),
+    ('Chapai_Nawabganj', 'Chapai Nawabganj'),
     ('Pabna', 'Pabna'),
     ('Rajshahi', 'Rajshahi'),
     ('Sirajganj', 'Sirajganj'),
@@ -64,7 +78,7 @@ SELECTED_DISTRICTS = (
     ('Rangpur', 'Rangpur'),
     ('Thakurgaon', 'Thakurgaon'),
     ('Habiganj', 'Habiganj'),
-    ('Moulvibazar', 'Moulvibazar'),
+    ('Maulvibazar', 'Maulvibazar'),
     ('Sunamganj', 'Sunamganj'),
     ('Sylhet', 'Sylhet'),
-)
+]

@@ -15,3 +15,7 @@ def validate_nid(value):
 def validate_phone_number(value):
     if len(value) < 11 or len(value) > 14:  # Check for reasonable phone number length
         raise ValidationError('Phone number must be between 10 and 15 digits.')
+    
+def validate_license_number(value):
+    if len(str(value)) != 8 or not str(value).isdigit():
+        raise ValidationError('License number must be exactly 8 digits.')
