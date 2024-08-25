@@ -3,6 +3,8 @@ from rest_framework.routers import DefaultRouter
 from . import views
 
 router = DefaultRouter()
+router.register(r'list',views.VaccineView,basename='vaccineList')
+router.register(r'campaign',views.CampaignView,basename='campaignList')
 router.register(r'book-vaccine', views.BookVaccineViewSet, basename='book-vaccine')
 router.register(r'book-campaign', views.BookCampaignViewSet, basename='book-campaign')
 router.register(r'comments', views.CommentViewSet, basename='comment')

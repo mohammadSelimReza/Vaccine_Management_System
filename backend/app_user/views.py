@@ -1,7 +1,7 @@
 from rest_framework import viewsets,generics,status
 from rest_framework.permissions import AllowAny,IsAuthenticated
 from .models import PatientModel,DoctorModel
-from .serializers import PatientRegistrationSerializer,DoctorRegistrationSerializer,LoginSerializer,UserNameUpdateSerializer,PatientProfileUpdateSerializer,DoctorProfileUpdateSerializer
+from .serializers import UserSerializer,PatientRegistrationSerializer,DoctorRegistrationSerializer,LoginSerializer,UserNameUpdateSerializer,PatientProfileUpdateSerializer,DoctorProfileUpdateSerializer
 from rest_framework.views import APIView
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
@@ -13,10 +13,25 @@ from django.contrib.auth.models import User
 from django.shortcuts import redirect
 from  django.contrib.auth import authenticate,login,logout
 from rest_framework.authtoken.models import Token
-class PatientRegistrationViewSet(APIView):
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]
+
+class PatientViewSet(viewsets.ModelViewSet):
     queryset = PatientModel.objects.all()
     serializer_class = PatientRegistrationSerializer
+    permission_classes = [AllowAny]
+    
+    
+    
 
+class PatientRegistrationViewSet(generics.CreateAPIView):
+    queryset = PatientModel.objects.all()
+    serializer_class = PatientRegistrationSerializer
+    permission_classes = [AllowAny]
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
@@ -95,7 +110,7 @@ class LoginSerializerView(APIView):
                 return Response({'token':token.key,'user.id':user.id})
             else:
                 return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
-        return Response({'error': 'Invalid credentials'}, status=status.HTTP)
+        return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
     
             
 class LogoutView(APIView):

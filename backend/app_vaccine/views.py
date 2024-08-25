@@ -5,6 +5,18 @@ from rest_framework.exceptions import ValidationError
 from .models import VaccineModel,VaccineCampaignModel,BookingModel,BookingCampaignModel,Comment
 from .serializers import VaccineSerializer,VaccineCampaignSerializer,BookVaccineSerializer,BookCampaignSerializer,CommentSerializer
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.permissions import AllowAny
+
+class VaccineView(ModelViewSet):
+    queryset = VaccineModel.objects.all()
+    serializer_class = VaccineSerializer
+    permission_classes = [AllowAny]
+
+class CampaignView(ModelViewSet):
+    queryset = VaccineCampaignModel.objects.all()
+    serializer_class = VaccineCampaignSerializer
+    permission_classes = [AllowAny]
+
 class VaccineListCreateAPIView(generics.ListCreateAPIView):
     queryset = VaccineModel.objects.all()
     serializer_class = VaccineSerializer

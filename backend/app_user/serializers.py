@@ -11,6 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'email', 'password', 'password2']
+        extra_kwargs = {"password":{"write_only": True},"password2":{"write_only": True}}
 
     def validate(self, data):
         if data['password'] != data['password2']:
@@ -38,7 +39,9 @@ class PatientRegistrationSerializer(serializers.ModelSerializer):
             'user', 'birth_date', 'gender', 'nid', 'phone_number', 'city',
             'street_address', 'zip_code', 'user_type', 'user_photo'
         ]
-
+        extra_kwargs = {
+            'user_photo': {'required': False, 'allow_null': True},
+        }
     def create(self, validated_data):
         user_data = validated_data.pop('user')
         user = UserSerializer.create(UserSerializer(), validated_data=user_data)
