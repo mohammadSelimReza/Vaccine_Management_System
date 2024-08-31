@@ -74,9 +74,11 @@ class BookingCampaignModel(models.Model):
         
 class Comment(models.Model):
     patient = models.ForeignKey(PatientModel, on_delete=models.CASCADE, related_name='comments')
+    patient_name = models.CharField(max_length=30,default='person', blank=True)
     campaign = models.ForeignKey(VaccineCampaignModel, on_delete=models.CASCADE, related_name='comments')
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    is_booked = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ('patient', 'campaign') 

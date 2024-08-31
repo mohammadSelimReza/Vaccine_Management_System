@@ -1,6 +1,20 @@
 import { NavLink } from "react-router-dom";
-
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants";
+import api from "../../api";
+import useAuth from "../../hooks/useAuth";
+import IMAGES from "../../Images/Images";
 const Header = () => {
+  const { isAuth, user, setIsAuth, navigate, doctorData, patientData } =
+    useAuth();
+
+  const handleLogout = () => {
+    api.post("/user/logout/");
+    localStorage.removeItem(ACCESS_TOKEN);
+    localStorage.removeItem(REFRESH_TOKEN);
+    setIsAuth(false);
+    navigate("/login");
+    window.location.reload();
+  };
   const link = (
     <>
       <li>
@@ -12,10 +26,42 @@ const Header = () => {
       <li>
         <NavLink to="/campaign">Campaign</NavLink>
       </li>
+      <li>
+        {isAuth && (
+          <details className="dropdown">
+            {patientData ? (
+              <summary className="btn m-1">History</summary>
+            ) : (
+              <summary className="btn m-1">Edit/Add</summary>
+            )}
+            <ul className="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+              {patientData ? (
+                <>
+                  <li>
+                    <NavLink to="/vaccine/report">Vaccine Report</NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/campaign/report">Campaign Report</NavLink>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li>
+                    <NavLink to="/vaccine/edit">Edit Vaccine</NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/campaign/edit">Edit Campaign</NavLink>
+                  </li>
+                </>
+              )}
+            </ul>
+          </details>
+        )}
+      </li>
     </>
   );
   return (
-    <div>
+    <div className="max-w-screen-lg mx-auto">
       <div className="navbar bg-base-100">
         <div className="navbar-start">
           <div className="dropdown">
@@ -48,12 +94,70 @@ const Header = () => {
           <ul className="menu menu-horizontal px-1">{link}</ul>
         </div>
         <div className="navbar-end">
-          <NavLink to="/registration" className="btn">
-            Sign Up
-          </NavLink>
-          <NavLink to="/login" className="btn">
-            Login
-          </NavLink>
+          {isAuth ? (
+            <>
+              <NavLink to="/profile"> {user?.username} </NavLink>
+              <button onClick={handleLogout} type="submit" className="btn">
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                className="btn"
+                onClick={() =>
+                  document.getElementById("my_modal_1").showModal()
+                }
+              >
+                Sign Up
+              </button>
+              <dialog id="my_modal_1" className="modal">
+                <div className="modal-box">
+                  <div className="flex gap-20">
+                    <div className="flex flex-col justify-center items-center">
+                      <img
+                        className="w-80 h-80"
+                        src={IMAGES.image4}
+                        alt="doctor"
+                      />
+                      <NavLink
+                        to="/registration/doctor"
+                        onClick={() =>
+                          document.getElementById("my_modal_1").close()
+                        }
+                      >
+                        Register as doctor?
+                      </NavLink>
+                    </div>
+                    <div className="flex flex-col justify-center items-center">
+                      <img
+                        className="w-80 h-80"
+                        src={IMAGES.image5}
+                        alt="patient"
+                      />
+                      <NavLink
+                        to="/registration/patient"
+                        onClick={() =>
+                          document.getElementById("my_modal_1").close()
+                        }
+                      >
+                        Register as patient?
+                      </NavLink>
+                    </div>
+                  </div>
+                  <div className="modal-action">
+                    <form method="dialog">
+                      {/* if there is a button in form, it will close the modal */}
+                      <button className="btn">Close</button>
+                    </form>
+                  </div>
+                </div>
+              </dialog>
+              <NavLink to="/login" className="btn">
+                Login
+              </NavLink>
+            </>
+          )}
         </div>
       </div>
     </div>

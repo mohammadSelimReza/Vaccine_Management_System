@@ -1,7 +1,7 @@
 from rest_framework import viewsets,generics,status
 from rest_framework.permissions import AllowAny,IsAuthenticated
 from .models import PatientModel,DoctorModel
-from .serializers import UserSerializer,PatientRegistrationSerializer,DoctorRegistrationSerializer,LoginSerializer,UserNameUpdateSerializer,PatientProfileUpdateSerializer,DoctorProfileUpdateSerializer
+from .serializers import UserSerializer,UserPasswordUpdateSerializer,PatientRegistrationSerializer,DoctorRegistrationSerializer,LoginSerializer,UserNameUpdateSerializer,PatientProfileUpdateSerializer,DoctorProfileUpdateSerializer
 from rest_framework.views import APIView
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
@@ -23,6 +23,11 @@ class UserViewSet(viewsets.ModelViewSet):
 class PatientViewSet(viewsets.ModelViewSet):
     queryset = PatientModel.objects.all()
     serializer_class = PatientRegistrationSerializer
+    permission_classes = [AllowAny]
+
+class DoctorViewSet(viewsets.ModelViewSet):
+    queryset = DoctorModel.objects.all()
+    serializer_class = DoctorRegistrationSerializer
     permission_classes = [AllowAny]
     
     
@@ -58,7 +63,7 @@ class PatientRegistrationViewSet(generics.CreateAPIView):
 class DoctorRegistrationViewSet(APIView):
     queryset = DoctorModel.objects.all()
     serializer_class = DoctorRegistrationSerializer
-
+    permission_classes= [AllowAny]
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
@@ -97,6 +102,7 @@ def activate(request, uid64, token):
 
     
 class LoginSerializerView(APIView):
+    permission_classes = [AllowAny]
     def post(self,request):
         serializer = LoginSerializer(data=self.request.data)
         if serializer.is_valid():
@@ -121,12 +127,21 @@ class LogoutView(APIView):
     
     
 class UserNameUpdateView(generics.RetrieveUpdateAPIView):
-    permission_classes = [IsAuthenticated]
-    queryset=User.objects.all()
+    permission_classes = [IsAuthenticated]  
+    queryset = User.objects.all()
     serializer_class = UserNameUpdateSerializer
+
     def get_object(self):
         # Return the current authenticated user
         return self.request.user
+    
+class UserPasswordUpdateView(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserPasswordUpdateSerializer
+    queryset = User.objects.all()
+    def get_object(self):
+        return self.request.user
+    
 class UserProfileUpdateView(generics.RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
     def get_queryset(self):

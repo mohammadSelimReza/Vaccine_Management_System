@@ -3,14 +3,14 @@ from django.contrib.auth.models import User
 from .models import PatientModel,DoctorModel
 from .constants import GENDER_TYPE, USER_TYPE
 from .validators import generate_unique_patient_number
-
+from django.contrib.auth.hashers import make_password
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, style={'input_type': 'password'})
     password2 = serializers.CharField(write_only=True, style={'input_type': 'password'})
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email', 'password', 'password2']
+        fields = ['id','username', 'first_name', 'last_name', 'email', 'password', 'password2']
         extra_kwargs = {"password":{"write_only": True},"password2":{"write_only": True}}
 
     def validate(self, data):
@@ -107,6 +107,20 @@ class UserNameUpdateSerializer(serializers.ModelSerializer):
         model = User
         fields = ['first_name', 'last_name']
         
+class UserPasswordUpdateSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, style={'input_type': 'password'})
+    password2 = serializers.CharField(write_only=True, style={'input_type': 'password'})
+    class Meta:
+        model = User
+        fields = ['password', 'password2']
+    def validate(self, data):
+        if data['password'] != data['password2']:
+            raise serializers.ValidationError("Passwords do not match.")
+        return data
+    def update(self, instance, validated_data):
+        instance.password = make_password(validated_data['password'])
+        instance.save()
+        return instance
 class PatientProfileUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = PatientModel

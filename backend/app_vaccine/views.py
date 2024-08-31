@@ -63,7 +63,7 @@ class BookVaccineViewSet(ModelViewSet):
     def perform_create(self, serializer):
         user = self.request.user
         if user.is_authenticated:
-            serializer.save(patient_name=user.username)  # Or handle patient information as needed
+            serializer.save()  # Or handle patient information as needed
         else:
             raise PermissionDenied("You must be logged in to book a vaccine.")
 
@@ -75,7 +75,7 @@ class BookCampaignViewSet(ModelViewSet):
     def perform_create(self, serializer):
         user = self.request.user
         if user.is_authenticated:
-            serializer.save(patient_name=user.username)  # Or handle patient information as needed
+            serializer.save()  # Or handle patient information as needed
         else:
             raise PermissionDenied("You must be logged in to book a vaccine.")
         

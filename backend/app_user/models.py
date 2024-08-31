@@ -14,7 +14,7 @@ class PatientModel(models.Model):
     street_address = models.CharField(max_length=100)
     zip_code = models.IntegerField()
     user_type = models.CharField(max_length=10, choices=USER_TYPE, blank=True, default='patient')
-    user_photo = models.ImageField(upload_to='images/user/', blank=True)
+    user_photo = models.ImageField(upload_to='images/user/', blank=True,null=True)
     patient_id = models.CharField(max_length=6, unique=True, blank=True, editable=False)
     def save(self, *args, **kwargs):
         if not self.patient_id:
@@ -53,7 +53,7 @@ class DoctorModel(models.Model):
     specialization = models.CharField(max_length=50, choices=VACCINE_SPECIALIZATIONS)
     license_number = models.CharField(max_length=8, validators=[validate_license_number],unique=True)
     user_type = models.CharField(max_length=10, choices=USER_TYPE, default='doctor')
-    user_photo = models.ImageField(upload_to='images/user/', blank=True)
+    user_photo = models.ImageField(upload_to='images/user/', blank=True,null=True)
     is_valid = models.BooleanField(default=False)
     def save(self, *args, **kwargs):
         if not self.user_photo:

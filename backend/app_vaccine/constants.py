@@ -28,7 +28,7 @@ BANGLADESH_DISTRICTS = [
     ('Chandpur', 'Chandpur'),
     ('Chattogram', 'Chattogram'),
     ('Cumilla', 'Cumilla'),
-    ('Coxs_Bazar', 'Cox\'s Bazar'),
+    ('Coxs_Bazar', 'Coxs_Bazar'),
     ('Feni', 'Feni'),
     ('Khagrachari', 'Khagrachari'),
     ('Lakshmipur', 'Lakshmipur'),

@@ -4,7 +4,6 @@ import "./index.css";
 import {
   createBrowserRouter,
   RouterProvider,
-  useNavigate,
 } from "react-router-dom";
 import Root from "./components/Root/Root.jsx";
 import Home from "./components/Home/Home.jsx";
@@ -12,21 +11,18 @@ import Vaccine from "./components/Pages/Vaccine/Vaccine.jsx";
 import Campaign from "./components/Pages/Campaign/Campaign.jsx";
 import ErrorPage from "./components/Pages/ErrorPage/ErrorPage.jsx";
 import Login from "./components/User/Login/Login.jsx";
-import ProtectedRoute from "./components/PrivateRoute/ProtectedRoute.jsx";
-import api from "./api.js";
 import PatientRegister from "./components/User/Registration/PatientRegister.jsx";
-const Logout = async (route) => {
-  const navigate = useNavigate();
-
-  try {
-    localStorage.removeItem("access");
-    localStorage.removeItem("refresh");
-    await api.post(route);
-    navigate("/");
-  } catch (error) {
-    console.error("Error during logout:", error.message);
-   }
-};
+import ProfileMain from "./components/User/Profile/ProfileMain/ProfileMain.jsx";
+import UserNameChange from "./components/User/Profile/UserNameChange/UserNameChange.jsx";
+import ProfileLayout from "./components/User/Profile/ProfileLayout/ProfileLayout.jsx";
+import UserBioUpdate from "./components/User/Profile/UserBioUpdate/UserBioUpdate.jsx";
+import PasswordChange from "./components/User/Profile/PasswordChange/PasswordChange.jsx";
+import VaccineReport from "./components/Pages/VaccineReport/VaccineReport.jsx";
+import CampaignReport from "./components/Pages/CampaignReport/CampaignReport.jsx";
+import CommentForm from "./components/Pages/PeopleComments/CommentForm.jsx";
+import CampaignAdd from "./components/Pages/Edit/CampaignEdit.jsx";
+import VaccineAdd from "./components/Pages/Edit/VaccineEdit/VaccineAdd.jsx";
+import DoctorRegistration from "./components/User/Registration/DoctorRegistration.jsx";
 
 const router = createBrowserRouter([
   {
@@ -51,7 +47,7 @@ const router = createBrowserRouter([
         element: <Login route="/user/api/token/" method="login"></Login>,
       },
       {
-        path: "/registration",
+        path: "/registration/patient",
         element: (
           // <Registration route="/user/patient/registration/" method="register" />
           <PatientRegister
@@ -61,11 +57,61 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/logout",
-        element: <Logout route="/user/logout/" />,
+        path: "/registration/doctor",
+        element: (
+          // <Registration route="/user/doctor/registration/" method="register" />
+          <DoctorRegistration
+            route="/user/doctor/registration/"
+            method="register"
+            ></DoctorRegistration> )
       },
+      {
+        path:'/vaccine/report',
+        element: <VaccineReport></VaccineReport>
+      },
+      {
+        path:'/campaign/report',
+        element: <CampaignReport></CampaignReport>
+      },
+      {
+        path:'/campaign/comments',
+        element: <CommentForm></CommentForm>
+      },
+      {
+        path:'/vaccine/edit',
+        element: <VaccineAdd></VaccineAdd>
+      },
+      {
+        path:'/campaign/edit',
+        element: <CampaignAdd></CampaignAdd>
+      }
+      ,
+      {
+        path: "/profile",
+        element: <ProfileLayout/>,
+        children:[
+          {
+                path: "/profile",
+                element:<ProfileMain/>,
+            },
+            {
+                path: "/profile/update-name",
+                element:<UserNameChange/>,
+            },
+            {
+              path:"/profile/update-bio",
+              element:<UserBioUpdate/>,
+            },
+            {
+              path: "/profile/change-password",
+              element: <PasswordChange/>
+            }
+
+        ]
+    }
     ],
   },
+  
 ]);
 
 createRoot(document.getElementById("root")).render(

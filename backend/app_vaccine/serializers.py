@@ -54,7 +54,7 @@ class BookCampaignSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ['patient', 'campaign', 'text', 'created_at']
+        fields = ['patient','patient_name', 'campaign', 'text', 'created_at']
         read_only_fields = ['created_at']
 
     def create(self, validated_data):
