@@ -18,7 +18,7 @@ const Login = ({ route, method }) => {
       if (method === "login") {
         localStorage.setItem(ACCESS_TOKEN, res.data.access);
         localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
-        
+
         navigate("/");
         window.location.reload();
       } else {
@@ -70,9 +70,16 @@ const Login = ({ route, method }) => {
                   </a>
                 </label>
               </div>
+              <div className="text-center">
+                {loading && (
+                  <div className="text-center">
+                    <span className="loading loading-spinner text-info"></span>
+                  </div>
+                )}
+              </div>
               <div className="form-control mt-6">
-                <button type="submit" className="btn btn-primary">
-                  Login
+                <button type="submit" className="btn btn-primary" disabled={loading}>
+                {loading ? "Logging in..." : "Login"}
                 </button>
               </div>
             </form>

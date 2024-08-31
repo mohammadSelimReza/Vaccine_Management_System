@@ -16,14 +16,14 @@ const PatientRegister = ({ route, method }) => {
   const [city, setCity] = useState("");
   const [street_address, setStreet_address] = useState("");
   const [zip_code, setZip_code] = useState("");
-  const [user_photo, setUser_photo] = useState('');
+  const [user_photo, setUser_photo] = useState("");
   const [user_type, setUser_type] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const gender_option = [
     { label: "Select gender", value: "select" },
-    { label:"Male", value: "Male" },
+    { label: "Male", value: "Male" },
     { label: "Female", value: "Female" },
     { label: "Other", value: "Other" },
   ];
@@ -39,75 +39,70 @@ const PatientRegister = ({ route, method }) => {
   };
   const handleImage = (event) => {
     setUser_photo(event.target.files[0]);
-  }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); 
     setError(null);
 
-    // Construct the data payload to match the expected API structure
+   
     const data = {
-        user: {
-            username: username,
-            first_name: first_name,
-            last_name: last_name,
-            email: email,
-        },
-        birth_date: birth_date,
-        gender: gender,
-        nid: nid,
-        phone_number: phone_number,
-        city: city,
-        street_address: street_address,
-        zip_code: zip_code,
-        user_type: user_type,
-        user_photo: null,
+      user: {
+        username: username,
+        first_name: first_name,
+        last_name: last_name,
+        email: email,
+      },
+      birth_date: birth_date,
+      gender: gender,
+      nid: nid,
+      phone_number: phone_number,
+      city: city,
+      street_address: street_address,
+      zip_code: zip_code,
+      user_type: user_type,
+      user_photo: null,
     };
 
-    // For registration, if passwords are included
+  
     if (method === "register") {
-        data.user.password = password;
-        data.user.password2 = password2;
+      data.user.password = password;
+      data.user.password2 = password2;
     }
 
-    console.log(JSON.stringify(data)); // For debugging purposes
+    console.log(JSON.stringify(data)); 
 
     try {
-        const res = await api.post(route, data);
+      const res = await api.post(route, data);
 
-        if (method === "login") {
-            localStorage.setItem(ACCESS_TOKEN, res.data.access);
-            localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
-            navigate("/");
-        } else {
-            navigate("/login");
-        }
+      if (method === "login") {
+        localStorage.setItem(ACCESS_TOKEN, res.data.access);
+        localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
+        navigate("/");
+      } else {
+        navigate("/login");
+      }
     } catch (error) {
       if (error.response) {
         console.error("Error Response:", error.response.data);
-        alert(JSON.stringify(error.response.data)); // or display this in a user-friendly way
-    } else {
+        alert(JSON.stringify(error.response.data)); 
+      } else {
         console.error("Error Message:", error.message);
         alert(error.message);
-    }
+      }
     } finally {
-        setLoading(false);
+      alert("Check your email to activate your account");
+      setLoading(false);
     }
-};
+  };
 
   return (
     <div>
       <section>
         <div className="max-w-4xl mx-auto font-[sans-serif] p-6">
           <div className="text-center mb-16">
-            <a href="javascript:void(0)">
-              <img
-                src="https://readymadeui.com/readymadeui.svg"
-                alt="logo"
-                className="w-52 inline-block"
-              />
-            </a>
             <h4 className="text-gray-800 text-base font-semibold mt-6">
-              Fill in your details
+              Fill up with your details
             </h4>
           </div>
 
@@ -332,14 +327,21 @@ const PatientRegister = ({ route, method }) => {
                 />
               </div>
             </div>
-
+            <div className="text-center">
+              {loading && (
+                <div className="text-center">
+                  <span className="loading loading-spinner text-info"></span>
+                </div>
+              )}
+            </div>
             {/* Submit Button */}
             <div className="!mt-12 flex justify-center">
               <button
                 type="submit"
                 className="py-3.5 px-7 text-sm font-semibold tracking-wider rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
+                disabled={loading}
               >
-                Create a new account
+                {loading ? "Creating..." : "Create a new account"}
               </button>
             </div>
           </form>

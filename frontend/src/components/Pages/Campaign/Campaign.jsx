@@ -95,7 +95,7 @@ const Campaign = () => {
   return (
     <div>
       <div className="md:max-w-7xl mx-auto my-10">
-        <h1 className="text-2xl text-center font-bold mb-8">Our Vaccine List</h1>
+        <h1 className="text-2xl text-center font-bold mb-8">Campaign List</h1>
 
         <dialog id="my_modal_3" className="modal">
           <div className="modal-box">

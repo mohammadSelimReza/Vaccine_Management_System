@@ -18,8 +18,8 @@ const DoctorRegistraition = ({ route, method }) => {
   const [zip_code, setZip_code] = useState("");
   const [user_photo, setUser_photo] = useState("");
   const [user_type, setUser_type] = useState("");
-  const [specialization,setSpecialization]=useState("");
-  const [license_number,setLicense_number]=useState("");
+  const [specialization, setSpecialization] = useState("");
+  const [license_number, setLicense_number] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -34,28 +34,31 @@ const DoctorRegistraition = ({ route, method }) => {
     { label: "Doctor", value: "Doctor" },
   ];
   const Specialization = [
-    { value: 'immunology', label: 'Immunology' },
-    { value: 'infectious_diseases', label: 'Infectious Diseases' },
-    { value: 'pediatrics', label: 'Pediatrics' },
-    { value: 'public_health', label: 'Public Health' },
-    { value: 'epidemiology', label: 'Epidemiology' },
-    { value: 'virology', label: 'Virology' },
-    { value: 'microbiology', label: 'Microbiology' },
-    { value: 'preventive_medicine', label: 'Preventive Medicine' },
-    { value: 'travel_medicine', label: 'Travel Medicine' },
-    { value: 'tropical_medicine', label: 'Tropical Medicine' },
-    { value: 'pharmacology', label: 'Pharmacology' },
-    { value: 'vaccine_development', label: 'Vaccine Development' },
-    { value: 'geriatrics', label: 'Geriatrics' },
-    { value: 'internal_medicine', label: 'Internal Medicine' },
-    { value: 'family_medicine', label: 'Family Medicine' },
-    { value: 'allergy_and_immunology', label: 'Allergy and Immunology' },
-    { value: 'occupational_medicine', label: 'Occupational Medicine' },
-    { value: 'health_policy_and_management', label: 'Health Policy and Management' },
-    { value: 'clinical_research', label: 'Clinical Research' },
-    { value: 'bioinformatics', label: 'Bioinformatics' }
+    { value: "immunology", label: "Immunology" },
+    { value: "infectious_diseases", label: "Infectious Diseases" },
+    { value: "pediatrics", label: "Pediatrics" },
+    { value: "public_health", label: "Public Health" },
+    { value: "epidemiology", label: "Epidemiology" },
+    { value: "virology", label: "Virology" },
+    { value: "microbiology", label: "Microbiology" },
+    { value: "preventive_medicine", label: "Preventive Medicine" },
+    { value: "travel_medicine", label: "Travel Medicine" },
+    { value: "tropical_medicine", label: "Tropical Medicine" },
+    { value: "pharmacology", label: "Pharmacology" },
+    { value: "vaccine_development", label: "Vaccine Development" },
+    { value: "geriatrics", label: "Geriatrics" },
+    { value: "internal_medicine", label: "Internal Medicine" },
+    { value: "family_medicine", label: "Family Medicine" },
+    { value: "allergy_and_immunology", label: "Allergy and Immunology" },
+    { value: "occupational_medicine", label: "Occupational Medicine" },
+    {
+      value: "health_policy_and_management",
+      label: "Health Policy and Management",
+    },
+    { value: "clinical_research", label: "Clinical Research" },
+    { value: "bioinformatics", label: "Bioinformatics" },
   ];
-  
+
   const handleGenderChange = (event) => {
     setGender(event.target.value);
   };
@@ -70,6 +73,7 @@ const DoctorRegistraition = ({ route, method }) => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     setError(null);
 
     // Construct the data payload to match the expected API structure
@@ -88,8 +92,8 @@ const DoctorRegistraition = ({ route, method }) => {
       street_address: street_address,
       zip_code: zip_code,
       user_type: user_type,
-      specialization:specialization,
-      license_number:license_number,
+      specialization: specialization,
+      license_number: license_number,
       user_photo: null,
     };
 
@@ -121,6 +125,8 @@ const DoctorRegistraition = ({ route, method }) => {
         alert(error.message);
       }
     } finally {
+      alert("Check your email to activate your account");
+      alert("admin need to confirm your license validation");
       setLoading(false);
     }
   };
@@ -130,13 +136,6 @@ const DoctorRegistraition = ({ route, method }) => {
       <section>
         <div className="max-w-4xl mx-auto font-[sans-serif] p-6">
           <div className="text-center mb-16">
-            <a href="javascript:void(0)">
-              <img
-                src="https://readymadeui.com/readymadeui.svg"
-                alt="logo"
-                className="w-52 inline-block"
-              />
-            </a>
             <h4 className="text-gray-800 text-base font-semibold mt-6">
               Hello, Doctor! Fill up your details
             </h4>
@@ -392,14 +391,21 @@ const DoctorRegistraition = ({ route, method }) => {
                 </select>
               </div>
             </div>
-
+            <div className="text-center">
+              {loading && (
+                <div className="text-center">
+                  <span className="loading loading-spinner text-info"></span>
+                </div>
+              )}
+            </div>
             {/* Submit Button */}
             <div className="!mt-12 flex justify-center">
               <button
                 type="submit"
                 className="py-3.5 px-7 text-sm font-semibold tracking-wider rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
+                disabled={loading}
               >
-                Create a new account
+                {loading ? "Creating..." : "Create a new account"}
               </button>
             </div>
           </form>

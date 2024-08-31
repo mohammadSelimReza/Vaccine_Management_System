@@ -88,7 +88,9 @@ const Header = () => {
               {link}
             </ul>
           </div>
-          <a className="btn btn-ghost text-xl">VaccineHub</a>
+          <a className="btn btn-ghost text-xl">
+            <NavLink to='/'>VaccineHub</NavLink>
+          </a>
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">{link}</ul>
@@ -96,15 +98,15 @@ const Header = () => {
         <div className="navbar-end">
           {isAuth ? (
             <>
-              <NavLink to="/profile"> {user?.username} </NavLink>
-              <button onClick={handleLogout} type="submit" className="btn">
+              <NavLink className='btn mr-4'  to="/profile"> {user?.username} </NavLink>
+              <button onClick={handleLogout} type="submit" className="btn btn-error text-white">
                 Logout
               </button>
             </>
           ) : (
             <>
               <button
-                className="btn"
+                className="btn btn-outline btn-primary mr-4"
                 onClick={() =>
                   document.getElementById("my_modal_1").showModal()
                 }
@@ -121,6 +123,7 @@ const Header = () => {
                         alt="doctor"
                       />
                       <NavLink
+                      className='btn btn-info text-white'
                         to="/registration/doctor"
                         onClick={() =>
                           document.getElementById("my_modal_1").close()
@@ -136,6 +139,7 @@ const Header = () => {
                         alt="patient"
                       />
                       <NavLink
+                      className='btn btn-info text-white'
                         to="/registration/patient"
                         onClick={() =>
                           document.getElementById("my_modal_1").close()
@@ -153,7 +157,7 @@ const Header = () => {
                   </div>
                 </div>
               </dialog>
-              <NavLink to="/login" className="btn">
+              <NavLink to="/login" className="btn btn-info">
                 Login
               </NavLink>
             </>

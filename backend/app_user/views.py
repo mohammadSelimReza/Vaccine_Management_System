@@ -75,7 +75,7 @@ class DoctorRegistrationViewSet(APIView):
             uid = urlsafe_base64_encode(force_bytes(user.pk))
 
             # Prepare the confirmation email
-            confirm_link = f"http://127.0.0.1:8000/user/activate/{uid}/{token}"
+            confirm_link = f"https://vaccine-management-backend-phvj.onrender.com/user/activate/{uid}/{token}"
             email_subject = "Confirm your email"
             email_body = render_to_string('confirm_email.html', {'confirm_link': confirm_link})
             email = EmailMultiAlternatives(email_subject, '', to=[user.email])
@@ -96,7 +96,8 @@ def activate(request, uid64, token):
     if user is not None and default_token_generator.check_token(user, token):
         user.is_active = True
         user.save()
-        return redirect('https://vaccine-hub.netlify.app/login')
+        return redirect('https://vaccine-hub.netlify.app')
+    
     return redirect('patientRegistration')
       
 
@@ -123,7 +124,7 @@ class LogoutView(APIView):
     def get(self,request):
         request.user.auth_token.delete()
         logout(request)
-        return redirect('login')
+        return redirect('https://vaccine-hub.netlify.app/')
     
     
 class UserNameUpdateView(generics.RetrieveUpdateAPIView):
