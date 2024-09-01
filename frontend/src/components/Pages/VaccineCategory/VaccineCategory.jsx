@@ -5,9 +5,7 @@ import Slider from "react-slick";
 const VaccineCategory = () => {
   const [vaccines, setVaccines] = useState([]);
   const [error, setError] = useState(null);
-  console.log("nice page");
   useEffect(() => {
-    console.log("vaccine page");
 
     // Fetch vaccine list when component mounts
     api

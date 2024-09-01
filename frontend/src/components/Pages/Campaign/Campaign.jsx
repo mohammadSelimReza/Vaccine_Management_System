@@ -10,15 +10,17 @@ const Campaign = () => {
   const [patientName, setPatientName] = useState("");
   const [patientAge, setPatientAge] = useState(null);
   const [appointmentDate, setAppointmentDate] = useState("");
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     api
       .get("/vaccine/campaign/")
       .then((res) => {
         setCampaign(res.data);
+        setLoading(false);
       })
       .catch((err) => {
         setError(err.message);
+        setLoading(false);
       });
   }, []);
 
@@ -65,7 +67,9 @@ const Campaign = () => {
       .then((res) => {
         alert("Campaign updated successfully!");
         document.getElementById("edit_modal").close();
-        setCampaign(campaign.map(c => c.id === selectedCampaign.id ? res.data : c));
+        setCampaign(
+          campaign.map((c) => (c.id === selectedCampaign.id ? res.data : c))
+        );
       })
       .catch((err) => {
         alert("Error updating campaign. Please try again.");
@@ -85,6 +89,7 @@ const Campaign = () => {
           alert("Campaign deleted successfully!");
         })
         .catch((error) => {
+          alert("Error deleting campaign. Please try again.");
           window.location.reload();
         });
     } else {
@@ -95,11 +100,23 @@ const Campaign = () => {
   return (
     <div>
       <div className="md:max-w-7xl mx-auto my-10">
-        <h1 className="text-2xl text-center font-bold mb-8">Campaign List</h1>
-
+        <h1 className="text-2xl text-center font-bold mb-8">
+          Our Campaign List
+        </h1>
+        {loading && (
+          <div className="flex justify-center my-10">
+            <span className="loading loading-spinner text-info"></span>
+          </div>
+        )}
+        {!loading && error && <p>Error: {error}</p>}
         <dialog id="my_modal_3" className="modal">
           <div className="modal-box">
-            <form onSubmit={(e) => { e.preventDefault(); handleBookingSubmit(); }}>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleBookingSubmit();
+              }}
+            >
               <button
                 type="button"
                 className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
@@ -107,18 +124,58 @@ const Campaign = () => {
               >
                 ✕
               </button>
-              <h3 className="font-bold text-lg">Hello! {user?.first_name} {user?.last_name}</h3>
-              <h6 className="font-semibold">Fill up this form to book an appointment.</h6>
+              <h3 className="font-bold text-lg">
+                Hello! {user?.first_name} {user?.last_name}
+              </h3>
+              <h6 className="font-semibold">
+                Fill up this form to book an appointment.
+              </h6>
               {/* Booking Form Fields */}
-              {/* ... */}
-              <button type="submit" className="btn btn-primary w-full mt-4">Submit</button>
+              <label className="form-control w-full max-w-xs">
+                <span className="label-text">Patient Name:</span>
+                <input
+                  type="text"
+                  value={patientName}
+                  onChange={(e) => setPatientName(e.target.value)}
+                  className="input input-bordered w-full max-w-xs"
+                  required
+                />
+              </label>
+              <label className="form-control w-full max-w-xs">
+                <span className="label-text">Patient Age:</span>
+                <input
+                  type="number"
+                  value={patientAge}
+                  onChange={(e) => setPatientAge(e.target.value)}
+                  className="input input-bordered w-full max-w-xs"
+                  required
+                />
+              </label>
+              <label className="form-control w-full max-w-xs">
+                <span className="label-text">Appointment Date:</span>
+                <input
+                  type="date"
+                  value={appointmentDate}
+                  onChange={(e) => setAppointmentDate(e.target.value)}
+                  className="input input-bordered w-full max-w-xs"
+                  required
+                />
+              </label>
+              <button type="submit" className="btn btn-primary w-full mt-4">
+                Submit
+              </button>
             </form>
           </div>
         </dialog>
 
         <dialog id="edit_modal" className="modal">
           <div className="modal-box">
-            <form onSubmit={(e) => { e.preventDefault(); handleUpdateSubmit(); }}>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleUpdateSubmit();
+              }}
+            >
               <button
                 type="button"
                 className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
@@ -134,28 +191,44 @@ const Campaign = () => {
                   type="text"
                   name="campaign_name"
                   value={selectedCampaign?.campaign_name || ""}
-                  onChange={(e) => setSelectedCampaign(prev => ({ ...prev, campaign_name: e.target.value }))}
+                  onChange={(e) =>
+                    setSelectedCampaign((prev) => ({
+                      ...prev,
+                      campaign_name: e.target.value,
+                    }))
+                  }
                   className="input input-bordered w-full max-w-xs"
                   required
                 />
               </label>
               {/* Other form fields... */}
-              <button type="submit" className="btn btn-primary w-full mt-4">Update</button>
+              <button type="submit" className="btn btn-primary w-full mt-4">
+                Update
+              </button>
             </form>
           </div>
         </dialog>
 
-        {error && <p>Error: {error}</p>}
 
-        <ul className="flex flex-wrap justify-center gap-4">
+        {
+          !loading && (
+            <ul className="flex flex-wrap justify-center gap-4">
           {campaign.map((vaccine) => (
             <div key={vaccine.id}>
               <div className="w-80 h-72 mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
                 <div className="p-6">
-                  <h2 className="text-xl font-bold mb-2 h-12">{vaccine.campaign_name}</h2>
-                  <p className="text-gray-600 mb-4">Vaccine: {vaccine.campaign_vaccine}</p>
-                  <p className="text-gray-600 mb-4 h-8">Starting Date: {vaccine.start_time}</p>
-                  <p className="text-gray-600 mb-4">For: {vaccine.campaign_for}</p>
+                  <h2 className="text-xl font-bold mb-2 h-12">
+                    {vaccine.campaign_name}
+                  </h2>
+                  <p className="text-gray-600 mb-4">
+                    Vaccine: {vaccine.campaign_vaccine}
+                  </p>
+                  <p className="text-gray-600 mb-4 h-8">
+                    Starting Date: {vaccine.start_time}
+                  </p>
+                  <p className="text-gray-600 mb-4">
+                    For: {vaccine.campaign_for}
+                  </p>
                   {patientData && (
                     <button
                       onClick={() => handleBookNowClick(vaccine)}
@@ -185,6 +258,8 @@ const Campaign = () => {
             </div>
           ))}
         </ul>
+          )
+        }
       </div>
     </div>
   );

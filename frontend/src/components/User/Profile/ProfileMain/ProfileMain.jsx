@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import useAuth from "../../../../hooks/useAuth";
-
+import IMAGES from "../../../../Images/Images";
 const ProfileMain = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -17,7 +17,8 @@ const ProfileMain = () => {
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <div className="max-w-96 mx-auto p-4">
+    <div className="flex">
+      <div className=" mx-auto p-4 w-3/4">
       <h1 className="md:text-2xl font-bold text-center mb-10">My Profile</h1>
       
       <div className="mb-4 md:flex">
@@ -95,6 +96,11 @@ const ProfileMain = () => {
           </div>
         </>
       )}
+    </div>
+    <div className="w-1/4">
+    <h2 className="text-xl font-semibold mb-4">Profile Photo</h2>
+      <img src={patientData?.user_photo || IMAGES.image6 } alt="" />
+    </div>
     </div>
   );
 };

@@ -5,7 +5,6 @@ import Slider from "react-slick";
 const PeopleComments = () => {
   const [vaccines, setVaccines] = useState([]);
   const [error, setError] = useState(null);
-  console.log("nice page");
   useEffect(() => {
     console.log("vaccine page");
 

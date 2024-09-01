@@ -15,6 +15,7 @@ const Vaccine = () => {
   const [remainingDates, setRemainingDates] = useState([]);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     vaccine_name: "",
     slug: "",
@@ -27,7 +28,7 @@ const Vaccine = () => {
     description: "",
     vaccine_for: "",
     vaccine_type: "",
-    added_by: 1, // Assuming the added_by is 1, adjust as needed
+    added_by: 1,
   });
 
   useEffect(() => {
@@ -36,9 +37,11 @@ const Vaccine = () => {
       .get("/vaccine/list/")
       .then((response) => {
         setVaccines(response.data);
+        setLoading(false);
       })
       .catch((error) => {
         console.error("There was an error fetching the vaccine data!", error);
+        setLoading(false);
       });
   }, []);
 
@@ -71,9 +74,11 @@ const Vaccine = () => {
       .patch(`/vaccine/list/${selectedVaccine.id}/`, formData)
       .then((response) => {
         // Refresh the vaccine list after editing the vaccine
-        setVaccines(vaccines.map((vaccine) => 
-          vaccine.id === response.data.id ? response.data : vaccine
-        ));
+        setVaccines(
+          vaccines.map((vaccine) =>
+            vaccine.id === response.data.id ? response.data : vaccine
+          )
+        );
         // Clear the form
         setFormData({
           vaccine_name: "",
@@ -98,7 +103,7 @@ const Vaccine = () => {
   const handleDelete = (vaccine) => {
     tryDelete(vaccine);
   };
-  
+
   const tryDelete = (vaccine) => {
     if (vaccine) {
       api
@@ -202,55 +207,69 @@ const Vaccine = () => {
 
   return (
     <div className="md:max-w-7xl mx-auto my-10">
-      <h1 className="text-2xl text-center font-bold mb-8">Our Vaccine List</h1>
-      {error && <p>Error: {error}</p>}
-      <ul className="flex flex-wrap justify-center gap-4">
-        {vaccines.map((vaccine) => (
-          <div key={vaccine.id}>
-            <div className="w-80 h-72 mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
-              <div className="p-6">
-                <h2 className="text-xl font-bold mb-2 h-12">
-                  {vaccine.vaccine_name}
-                </h2>
-                <p className="text-gray-600 mb-4">
-                  Manufacturer: {vaccine.manufacturer}
-                </p>
-                <p className="text-gray-600 mb-4 h-8">
-                  Description: {vaccine.description}
-                </p>
-                <p className="text-gray-600 mb-4">For: {vaccine.vaccine_for}</p>
-                <p className="text-gray-600 mb-4">
-                  Type: {vaccine.vaccine_type}
-                </p>
-                {patientData ? (
-                  <button
-                    onClick={() => handleBookNowClick(vaccine)}
-                    className="text-white bg-blue-500 hover:bg-blue-700 w-full py-3 rounded-md text-sm font-medium"
-                  >
-                    Book Now
-                  </button>
-                ) : null}
-                {doctorData ? (
-                  <div className="flex gap-4">
-                    <button
-                      onClick={() => handleEditClick(vaccine)}
-                      className="text-white bg-blue-500 hover:bg-blue-700 w-full py-3 rounded-md text-sm font-medium"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(vaccine)}
-                      className="text-white bg-red-500 hover:bg-blue-700 w-full py-3 rounded-md text-sm font-medium"
-                    >
-                      Delete
-                    </button>
+      <h1 className="text-2xl text-center font-bold mb-8">
+        Vaccine We Provided
+      </h1>
+      {/* Loading Spinner */}
+      {loading && (
+        <div className="flex justify-center my-10">
+          <span className="loading loading-spinner text-info"></span>
+        </div>
+      )}
+      {!loading && error && <p>Error: {error}</p>}
+      {!loading && (
+        <ul className="flex flex-wrap justify-center gap-4">
+          {vaccines.map((vaccine) => (
+            <div key={vaccine.id}>
+              <div className="card bg-base-100 w-96 shadow-xl">
+                <figure className="px-10 pt-10">
+                  <img
+                    src={vaccine.vaccine_img}
+                    alt="vaccine_img"
+                    className="rounded-xl h-52"
+                    style={{ width: "304px" }}
+                  />
+                </figure>
+                <div className="card-body items-center text-center">
+                  <h2 className="card-title font-bold">
+                    {vaccine.vaccine_name}{" "}
+                  </h2>
+                  <p className="text-gray-600 font-semibold">
+                    Manufacturer: {vaccine.manufacturer}
+                  </p>
+                  <p className="h-10 mb-4">{vaccine.description} </p>
+                  <div className="card-actions">
+                    {patientData ? (
+                      <button
+                        onClick={() => handleBookNowClick(vaccine)}
+                        className="btn btn-primary"
+                      >
+                        Book Now
+                      </button>
+                    ) : null}
+                    {doctorData ? (
+                      <div className="flex gap-4">
+                        <button
+                          onClick={() => handleEditClick(vaccine)}
+                          className="text-white bg-blue-500 hover:bg-blue-700 w-full py-3 rounded-md text-sm font-medium"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(vaccine)}
+                          className="text-white bg-red-500 hover:bg-blue-700 w-full py-3 rounded-md text-sm font-medium"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    ) : null}
                   </div>
-                ) : null}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </ul>
+          ))}
+        </ul>
+      )}
 
       {/* Booking Modal */}
       {isBookingModalOpen && (
@@ -260,12 +279,24 @@ const Vaccine = () => {
               onSubmit={(e) => {
                 e.preventDefault();
                 handleBookingSubmit();
+                e.target.reset();
+                setIsBookingModalOpen(false);
+                setRemainingDates([]); // Clear remaining dates
+                setAppointmentDate("");
+                setPatientName("");
+                setPatientAge("");
               }}
             >
               <button
                 type="button"
                 className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-                onClick={() => setIsBookingModalOpen(false)}
+                onClick={() => {
+                  setIsBookingModalOpen(false);
+                  setRemainingDates([]); // Clear remaining dates
+                  setAppointmentDate("");
+                  setPatientName("");
+                  setPatientAge("");
+                }}
               >
                 ✕
               </button>
@@ -310,14 +341,26 @@ const Vaccine = () => {
                   required
                 />
               </label>
+              <p className="font-medium text-sm pl-2 mt-4">
+                Total Dose: {selectedVaccine.dose_count}{" "}
+              </p>
               <div className="form-control w-full max-w-xs">
                 <label className="label">
-                  <span className="label-text">Remaining Dose Dates:</span>
+                  <span className="label-text">Remaining Dose Dates: </span>
                 </label>
-                <ul>
-                  {remainingDates.map((date, index) => (
-                    <li key={index}>{date}</li>
-                  ))}
+                <ul className="pl-20">
+                  {selectedVaccine.dose_count > 1 ? (
+                    <div>
+                      {remainingDates.map((date, index) => (
+                        <li key={index}>
+                          {" "}
+                          {index + 2}st dose: {date}
+                        </li>
+                      ))}
+                    </div>
+                  ) : (
+                    <p>Only one dose</p>
+                  )}
                 </ul>
               </div>
               <div className="modal-action">

@@ -12,7 +12,7 @@ const Header = () => {
     localStorage.removeItem(ACCESS_TOKEN);
     localStorage.removeItem(REFRESH_TOKEN);
     setIsAuth(false);
-    navigate("/login");
+    navigate("/");
     window.location.reload();
   };
   const link = (
@@ -98,7 +98,7 @@ const Header = () => {
         <div className="navbar-end">
           {isAuth ? (
             <>
-              <NavLink className='btn mr-4'  to="/profile"> {user?.username} </NavLink>
+              <NavLink className='btn mr-4'  to="/profile"> <img src={patientData?.user_photo || doctorData?.user_photo} className="w-10 h-10" alt="" /> </NavLink>
               <button onClick={handleLogout} type="submit" className="btn btn-error text-white">
                 Logout
               </button>
