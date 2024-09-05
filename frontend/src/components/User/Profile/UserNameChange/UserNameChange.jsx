@@ -1,6 +1,8 @@
 import { useState } from "react";
 import api from "../../../../api";
-import useAuth from "../../../../hooks/useAuth";
+import useAuth from "../../../../context/useAuth";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const UserNameChange = () => {
     const [firstName, setFirstName] = useState("");
@@ -9,7 +11,7 @@ const UserNameChange = () => {
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
     const { user } = useAuth();
-
+    const navigate = useNavigate();
     const handleNameSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -30,6 +32,8 @@ const UserNameChange = () => {
             setError("An error occurred while updating your name. Please try again.");
         } finally {
             setLoading(false);
+            toast.success("Your name has been updated");
+            navigate('/profile');
         }
     };
 

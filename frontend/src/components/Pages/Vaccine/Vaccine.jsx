@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import api from "../../../api";
-import useAuth from "../../../hooks/useAuth";
+import useAuth from "../../../context/useAuth";
+import toast from "react-hot-toast";
+
 
 const Vaccine = () => {
   const [vaccines, setVaccines] = useState([]);
@@ -193,7 +195,8 @@ const Vaccine = () => {
     api
       .post("/vaccine/book-vaccine/", bookingData)
       .then((res) => {
-        alert("Vaccine booked successfully!");
+        // alert("Vaccine booked successfully!");
+        toast.success("Vaccine booking successfully!");
         setIsBookingModalOpen(false);
         // Reset form fields
         setPatientAge("");
@@ -201,9 +204,13 @@ const Vaccine = () => {
         setRemainingDates([]);
       })
       .catch((err) => {
-        alert("Error booking vaccine. Please try again.");
+        // alert("Error booking vaccine. Please try again.");
+        toast.error("Error booking vaccine. Please try again.");
+        setIsBookingModalOpen(false);
       });
   };
+  const cloudinaryBaseUrl = 'https://res.cloudinary.com/dofqxmuya/';
+  const imageUrl = patientData?.user_photo ? `${cloudinaryBaseUrl}${patientData.user_photo}` : "Null";
 
   return (
     <div className="md:max-w-7xl mx-auto my-10">
@@ -224,7 +231,7 @@ const Vaccine = () => {
               <div className="card bg-base-100 w-96 shadow-xl">
                 <figure className="px-10 pt-10">
                   <img
-                    src={vaccine.vaccine_img}
+                    src={`https://res.cloudinary.com/dofqxmuya/${vaccine.vaccine_img}`}
                     alt="vaccine_img"
                     className="rounded-xl h-52"
                     style={{ width: "304px" }}

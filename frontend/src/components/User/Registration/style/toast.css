@@ -1,0 +1,27 @@
+.toast-container {
+    position: fixed; /* Fixes the position relative to the viewport */
+    top: 1rem;
+    left: 1rem;
+    z-index: 9999; /* Ensures it’s above other content */
+    display: flex;
+    flex-direction: column; /* Stacks toasts vertically */
+    gap: 0.5rem; /* Space between toasts */
+  }
+  
+  .toast {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  .alert-info {
+    background-color: #3b82f6;
+    color: white;
+  }
+  
+  .alert-success {
+    background-color: #10b981;
+    color: white;
+  }
+  

@@ -1,8 +1,10 @@
 import { useState } from "react";
-import useAuth from "../../../../hooks/useAuth";
+// import useAuth from "../../../../hooks/useAuth";
 import api from "../../../../api";
 import { useNavigate } from "react-router-dom";
 import { ACCESS_TOKEN,REFRESH_TOKEN } from "../../../../constants";
+import useAuth from "../../../../context/useAuth";
+import toast from "react-hot-toast";
 const PasswordChange = () => {
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
@@ -24,7 +26,7 @@ const PasswordChange = () => {
     }
 
     try {
-      const response = api.patch(`/user/update-password/`, {
+      const response = api.put(`/user/update-password/`, {
         password: password,
         password2: password2,
       });
@@ -40,12 +42,9 @@ const PasswordChange = () => {
       );
     } finally {
       setLoading(false);
-    //   api.post("/user/logout/");
-    //   localStorage.removeItem(ACCESS_TOKEN);
-    //   localStorage.removeItem(REFRESH_TOKEN);
-    //   setIsAuth(false);
-    //   navigate("/login");
-      window.location.reload();
+      toast.success("You have successfully changed your password.");
+      navigate("/profile");
+      // window.location.reload();
     }
   };
 

@@ -3,11 +3,11 @@ const VaccineImportant = () => {
   return (
     <div className="max-w-screen-lg mx-auto my-20">
       <h1 className="md:text-2xl font-bold text-center mb-10">Frequently Asked Questions</h1>
-      <div className="flex gap-10">
-        <div className="w-1/4">
-          <img src={IMAGES.image3} alt="choose_us" />
+      <div className="flex">
+        <div className="w-2/5">
+          <img className="h-full" src={`https://res.cloudinary.com/dofqxmuya/image/upload/v1725396414/Vaccine-FAQ_bnwmf3.jpg`} alt="choose_us" />
         </div>
-        <div className="w-3/4">
+        <div className="w-3/5">
           <div className="collapse collapse-arrow bg-base-200">
             <input type="radio" name="my-accordion-2" defaultChecked />
             <div className="collapse-title text-xl font-medium">

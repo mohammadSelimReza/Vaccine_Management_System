@@ -1,8 +1,8 @@
 import { NavLink } from "react-router-dom";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants";
 import api from "../../api";
-import useAuth from "../../hooks/useAuth";
 import IMAGES from "../../Images/Images";
+import useAuth from "../../context/useAuth";
 const Header = () => {
   const { isAuth, user, setIsAuth, navigate, doctorData, patientData } =
     useAuth();
@@ -60,6 +60,11 @@ const Header = () => {
       </li>
     </>
   );
+  const cloudinaryBaseUrl = "https://res.cloudinary.com/dofqxmuya/";
+  const imageUrl = patientData?.user_photo
+    ? `${cloudinaryBaseUrl}${patientData.user_photo}`
+    : IMAGES.image6;
+
   return (
     <div className="max-w-screen-lg mx-auto">
       <div className="navbar bg-base-100">
@@ -89,20 +94,56 @@ const Header = () => {
             </ul>
           </div>
           <a className="btn btn-ghost text-xl">
-            <NavLink to='/'>VaccineHub</NavLink>
+            <NavLink to="/">VaccineHub</NavLink>
           </a>
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">{link}</ul>
         </div>
         <div className="navbar-end">
-          {isAuth ? (
+          {isAuth && patientData ? (
             <>
-              <NavLink className='btn mr-4'  to="/profile"> <img src={patientData?.user_photo || doctorData?.user_photo} className="w-10 h-10" alt="" /> </NavLink>
-              <button onClick={handleLogout} type="submit" className="btn btn-error text-white">
-                Logout
-              </button>
+              <NavLink
+                className="border-l-neutral-400 border-4 rounded-full mr-4"
+                to="/profile"
+              >
+                {" "}
+                <img
+                  src={
+                    doctorData?.user_photo || patientData?.user_photo || "N/A"
+                  }
+                  className="w-10 h-10 rounded-full"
+                  alt=""
+                />{" "}
+              </NavLink>
             </>
+          ) : null}
+          {isAuth && doctorData ? (
+            <>
+              <NavLink
+                className="border-l-neutral-400 border-4 rounded-full mr-4"
+                to="/dashboard"
+              >
+                {" "}
+                <img
+                  src={
+                    doctorData?.user_photo || patientData?.user_photo || "N/A"
+                  }
+                  className="w-10 h-10 rounded-full"
+                  alt=""
+                />{" "}
+              </NavLink>
+            </>
+          ) : null}
+
+          {isAuth ? (
+            <button
+              onClick={handleLogout}
+              type="submit"
+              className="btn btn-error text-white"
+            >
+              Logout
+            </button>
           ) : (
             <>
               <button
@@ -123,7 +164,7 @@ const Header = () => {
                         alt="doctor"
                       />
                       <NavLink
-                      className='btn btn-info text-white'
+                        className="btn btn-info text-white"
                         to="/registration/doctor"
                         onClick={() =>
                           document.getElementById("my_modal_1").close()
@@ -139,7 +180,7 @@ const Header = () => {
                         alt="patient"
                       />
                       <NavLink
-                      className='btn btn-info text-white'
+                        className="btn btn-info text-white"
                         to="/registration/patient"
                         onClick={() =>
                           document.getElementById("my_modal_1").close()

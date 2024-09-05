@@ -9,7 +9,7 @@ const VaccineCategory = () => {
 
     // Fetch vaccine list when component mounts
     api
-      .get("/vaccine/list/")
+      .get("/vaccine/vaccine-type/")
       .then((res) => {
         // If using Axios, the response data is in res.data
         console.log(res.data); // Log data for debugging
@@ -35,12 +35,13 @@ const VaccineCategory = () => {
   return (
     <div className="slider-container max-w-screen-lg mx-auto my-12">
       <h2 className="text-center text-2xl font-bold">Vaccine Category</h2>
-      <p className="text-center text-sm font-semibold mt-2 mb-8">Vaccine We Provide</p>
+      {/* <p className="text-center text-sm font-semibold mt-2 mb-8">Ve</p> */}
       <Slider {...settings}>
         {vaccines.map((vaccine) => (
           <div key={vaccine.id}>
+            <img src={`https://res.cloudinary.com/dofqxmuya/${vaccine.type_img}`} className="w-56 h-40 p-4" alt="" />
             <h2 className="md:text-xl font-bold text-center h-10">{vaccine.vaccine_type } </h2>
-            <h2 className="text-center md:text-base font-medium w-2/3 mx-auto">{vaccine.description} </h2>
+            
           </div>
         ))}
       </Slider>

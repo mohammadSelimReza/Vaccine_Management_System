@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-
-import api from "../../../../api";
-import useAuth from "../../../../context/useAuth";
+import useAuth from "../../../../../context/useAuth";
 import { useNavigate } from "react-router-dom";
+import api from "../../../../../api";
 import toast from "react-hot-toast";
-const UserBioUpdate = () => {
+
+const DoctorUpBio = () => {
     const [formData, setFormData] = useState({
         birth_date: "",
         gender: "",
@@ -158,4 +158,4 @@ const UserBioUpdate = () => {
     );
 };
 
-export default UserBioUpdate;
+export default DoctorUpBio;

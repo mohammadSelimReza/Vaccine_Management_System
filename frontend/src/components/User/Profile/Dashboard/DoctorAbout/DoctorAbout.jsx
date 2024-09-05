@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import useAuth from "../../../../../context/useAuth";
 
-import IMAGES from "../../../../Images/Images";
-import useAuth from "../../../../context/useAuth";
-const ProfileMain = () => {
+const DoctorAbout = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { user, patientData, doctorData } = useAuth();
@@ -109,4 +108,4 @@ const ProfileMain = () => {
   );
 };
 
-export default ProfileMain;
+export default DoctorAbout;

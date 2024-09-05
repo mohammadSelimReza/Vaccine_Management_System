@@ -3,11 +3,15 @@ import IMAGES from "../../../Images/Images";
 import { useNavigate } from "react-router-dom";
 import api from "../../../api";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../../constants";
+import toast from "react-hot-toast";
+import useAuth from "../../../context/useAuth";
+// import useAuth from "../../../context/useAuth";
 const Login = ({ route, method }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const {setIsAuth,setUser} = useAuth();
   const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,18 +22,24 @@ const Login = ({ route, method }) => {
       if (method === "login") {
         localStorage.setItem(ACCESS_TOKEN, res.data.access);
         localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
-
-        navigate("/");
-        window.location.reload();
+        setIsAuth(true);  // Update authentication state
+        setUser(res.data.user);  // Assuming user data is included in the response
+        toast.success("You have logged in successfully.");
+        setTimeout(() => {
+          navigate("/"); // Redirect to the homepage after 3 seconds
+          window.location.reload();
+        }, 500); // Navigate to the home page or dashboard
       } else {
         navigate("/login");
+        
       }
     } catch (error) {
-      alert(error);
+      toast.error("Invalid username and password"); // Show a proper error message instead of an alert
     } finally {
       setLoading(false);
     }
   };
+  
   return (
     <div>
       <div className="hero bg-base-200 min-h-screen">

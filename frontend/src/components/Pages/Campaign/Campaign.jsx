@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import useAuth from "../../../hooks/useAuth";
 import api from "../../../api";
+import useAuth from "../../../context/useAuth";
+import toast from "react-hot-toast";
 
 const Campaign = () => {
   const [campaign, setCampaign] = useState([]);
+  const [vaccineData, setVaccineData] = useState([]);
   const [error, setError] = useState(null);
   const { user, patientData, doctorData } = useAuth();
   const [selectedCampaign, setSelectedCampaign] = useState(null);
@@ -11,6 +13,8 @@ const Campaign = () => {
   const [patientAge, setPatientAge] = useState(null);
   const [appointmentDate, setAppointmentDate] = useState("");
   const [loading, setLoading] = useState(true);
+  const [addedDoc, setAddedDoc] = useState([]);
+  const [authorized, setAuthorized] = useState(false);
   useEffect(() => {
     api
       .get("/vaccine/campaign/")
@@ -23,6 +27,40 @@ const Campaign = () => {
         setLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    api
+      .get("/vaccine/list/")
+      .then((res) => {
+        setVaccineData(res.data);
+      })
+      .catch((err) => {
+        setError(err.message);
+      });
+  }, []);
+  const fetchDoctorData = async (doctorId) => {
+    try {
+      const response = await api.get(`/user/doctors/${doctorId}`);
+      setAddedDoc(response.data);
+      return response.data;
+    } catch (err) {
+      toast.error("Failed to fetch doctor data");
+      setError(err.message);
+      return null;
+    }
+  };
+
+  // Map vaccine IDs to names for quick lookup
+  const vaccineMap = vaccineData.reduce((acc, vaccine) => {
+    acc[vaccine.id] = vaccine.vaccine_name;
+    return acc;
+  }, {});
+
+  // Update campaigns with vaccine names
+  const updatedCampaigns = campaign.map((camp) => ({
+    ...camp,
+    vaccine_name: vaccineMap[camp.campaign_vaccine] || "Unknown Vaccine",
+  }));
 
   const handleBookNowClick = (vaccine) => {
     setSelectedCampaign(vaccine);
@@ -37,16 +75,17 @@ const Campaign = () => {
     }
 
     const bookingData = {
+      user:user.id,
       patient_name: patientName,
       patient_age: patientAge,
-      campaign_name: selectedCampaign.id, // Corrected field name
+      campaign_name: selectedCampaign.id,
       first_dose_date: appointmentDate,
     };
-
+    console.log(JSON.stringify(bookingData));
     api
       .post("/vaccine/book-campaign/", bookingData)
       .then((res) => {
-        alert("Vaccine booked successfully!");
+        toast.success("Campaign booked successfully!");
         document.getElementById("my_modal_3").close();
         setPatientAge(null);
         setAppointmentDate("");
@@ -56,10 +95,25 @@ const Campaign = () => {
       });
   };
 
-  const handleEdit = (campaign) => {
-    setSelectedCampaign(campaign);
-    document.getElementById("edit_modal").showModal();
+  const handleEdit = async (campaign) => {
+    const doctor = await fetchDoctorData(campaign.added_by); // Wait for the doctor data to be fetched
+  
+    if (doctor?.user?.id !== user?.id) { // Ensure authorization check happens after data is fetched
+      setAuthorized(false);
+      toast.error("You are not authorized to edit this campaign.");
+      return;
+    } else {
+      // Format start_time and end_time for input type="datetime-local"
+      const formattedCampaign = {
+        ...campaign,
+        start_time: campaign.start_time.substring(0, 16), // "YYYY-MM-DDTHH:mm"
+        end_time: campaign.end_time.substring(0, 16), // "YYYY-MM-DDTHH:mm"
+      };
+      setSelectedCampaign(formattedCampaign);
+      document.getElementById("edit_modal").showModal();
+    }
   };
+  
 
   const handleUpdateSubmit = () => {
     api
@@ -76,8 +130,18 @@ const Campaign = () => {
       });
   };
 
-  const handleDelete = (campaign) => {
-    tryDelete(campaign);
+  const handleDelete = async(campaign) => {
+    const doctor = await fetchDoctorData(campaign.added_by); // Wait for the doctor data to be fetched
+  
+    if (doctor?.user?.id !== user?.id) { 
+      setAuthorized(false);
+      toast.error("You are not authorized to delete this campaign.");
+      return;
+    }
+    else{
+      tryDelete(campaign);
+    }
+    
   };
 
   const tryDelete = (campaign) => {
@@ -97,6 +161,15 @@ const Campaign = () => {
     }
   };
 
+  const formatDate = (isoString) => {
+    const date = new Date(isoString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+  console.log(selectedCampaign);
   return (
     <div>
       <div className="md:max-w-7xl mx-auto my-10">
@@ -130,7 +203,6 @@ const Campaign = () => {
               <h6 className="font-semibold">
                 Fill up this form to book an appointment.
               </h6>
-              {/* Booking Form Fields */}
               <label className="form-control w-full max-w-xs">
                 <span className="label-text">Patient Name:</span>
                 <input
@@ -158,6 +230,20 @@ const Campaign = () => {
                   value={appointmentDate}
                   onChange={(e) => setAppointmentDate(e.target.value)}
                   className="input input-bordered w-full max-w-xs"
+                  min={
+                    selectedCampaign
+                      ? new Date(selectedCampaign.start_time)
+                          .toISOString()
+                          .split("T")[0]
+                      : ""
+                  }
+                  max={
+                    selectedCampaign
+                      ? new Date(selectedCampaign.end_time)
+                          .toISOString()
+                          .split("T")[0]
+                      : ""
+                  }
                   required
                 />
               </label>
@@ -184,7 +270,8 @@ const Campaign = () => {
                 ✕
               </button>
               <h3 className="font-bold text-lg">Edit Campaign</h3>
-              {/* Editing Form Fields */}
+
+              {/* Campaign Name */}
               <label className="form-control w-full max-w-xs">
                 <span className="label-text">Campaign Name:</span>
                 <input
@@ -201,7 +288,80 @@ const Campaign = () => {
                   required
                 />
               </label>
-              {/* Other form fields... */}
+
+              {/* Area */}
+              <label className="form-control w-full max-w-xs">
+                <span className="label-text">Area:</span>
+                <input
+                  type="text"
+                  name="area"
+                  value={selectedCampaign?.area || ""}
+                  onChange={(e) =>
+                    setSelectedCampaign((prev) => ({
+                      ...prev,
+                      area: e.target.value,
+                    }))
+                  }
+                  className="input input-bordered w-full max-w-xs"
+                  required
+                />
+              </label>
+
+              {/* Start Time */}
+              <label className="form-control w-full max-w-xs">
+                <span className="label-text">Start Time:</span>
+                <input
+                  type="datetime-local"
+                  name="start_time"
+                  value={selectedCampaign?.start_time || ""}
+                  onChange={(e) =>
+                    setSelectedCampaign((prev) => ({
+                      ...prev,
+                      start_time: e.target.value,
+                    }))
+                  }
+                  className="input input-bordered w-full max-w-xs"
+                  required
+                />
+              </label>
+
+              {/* End Time */}
+              <label className="form-control w-full max-w-xs">
+                <span className="label-text">End Time:</span>
+                <input
+                  type="datetime-local"
+                  name="end_time"
+                  value={selectedCampaign?.end_time || ""}
+                  onChange={(e) =>
+                    setSelectedCampaign((prev) => ({
+                      ...prev,
+                      end_time: e.target.value,
+                    }))
+                  }
+                  className="input input-bordered w-full max-w-xs"
+                  required
+                />
+              </label>
+
+              {/* Target Population */}
+              <label className="form-control w-full max-w-xs">
+                <span className="label-text">Target Population:</span>
+                <input
+                  type="number"
+                  name="target_population"
+                  value={selectedCampaign?.target_population || ""}
+                  onChange={(e) =>
+                    setSelectedCampaign((prev) => ({
+                      ...prev,
+                      target_population: e.target.value,
+                    }))
+                  }
+                  className="input input-bordered w-full max-w-xs"
+                  required
+                />
+              </label>
+
+              {/* Submit Button */}
               <button type="submit" className="btn btn-primary w-full mt-4">
                 Update
               </button>
@@ -209,57 +369,69 @@ const Campaign = () => {
           </div>
         </dialog>
 
+        {!loading && (
+          <ul className="flex flex-wrap justify-center gap-4">
+            {updatedCampaigns.map((vaccine) => (
+              <div key={vaccine.id}>
+                <div className="card bg-base-100 w-96 shadow-xl">
+                  <figure className="px-10 pt-10">
+                    <img
+                      src={`https://res.cloudinary.com/dofqxmuya/${vaccine.campaign_img}`}
+                      alt="vaccine_img"
+                      className="rounded-xl h-52"
+                      style={{ width: "304px" }}
+                    />
+                  </figure>
+                  <div className="p-6">
+                    <h2 className="text-xl font-bold mb-2 h-12">
+                      {vaccine.campaign_name}
+                    </h2>
+                    <p className="text-gray-600 mb-4">
+                      Vaccine: {vaccine.vaccine_name}
+                    </p>
+                    <p className="text-gray-600 mb-4 h-8">
+                      Starting Date: {formatDate(vaccine.start_time)}
+                    </p>
+                    <p className="text-gray-600 mb-4">
+                      For: {vaccine.campaign_for}
+                    </p>
+                    <p className="text-gray-600 mb-4">Area: {vaccine.area}</p>
+                    <p className="text-gray-600 mb-4">
+                      Target Population: {vaccine.target_population}
+                    </p>
+                    <div className="card-actions">
+                      {patientData && (
+                        <button
+                          className="btn btn-primary"
+                          onClick={() => handleBookNowClick(vaccine)}
+                        >
+                          Book Now
+                        </button>
+                      )}
 
-        {
-          !loading && (
-            <ul className="flex flex-wrap justify-center gap-4">
-          {campaign.map((vaccine) => (
-            <div key={vaccine.id}>
-              <div className="w-80 h-72 mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
-                <div className="p-6">
-                  <h2 className="text-xl font-bold mb-2 h-12">
-                    {vaccine.campaign_name}
-                  </h2>
-                  <p className="text-gray-600 mb-4">
-                    Vaccine: {vaccine.campaign_vaccine}
-                  </p>
-                  <p className="text-gray-600 mb-4 h-8">
-                    Starting Date: {vaccine.start_time}
-                  </p>
-                  <p className="text-gray-600 mb-4">
-                    For: {vaccine.campaign_for}
-                  </p>
-                  {patientData && (
-                    <button
-                      onClick={() => handleBookNowClick(vaccine)}
-                      className="btn btn-primary"
-                    >
-                      Book Now
-                    </button>
-                  )}
-                  {doctorData && (
-                    <div className="flex justify-end mt-2">
-                      <button
-                        onClick={() => handleEdit(vaccine)}
-                        className="btn btn-secondary mr-2"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(vaccine)}
-                        className="btn btn-error"
-                      >
-                        Delete
-                      </button>
+                      {doctorData && (
+                        <div>
+                          <button
+                            className="btn btn-secondary"
+                            onClick={() => handleEdit(vaccine)}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            className="btn btn-error"
+                            onClick={() => handleDelete(vaccine)}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      )}
                     </div>
-                  )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </ul>
-          )
-        }
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );
