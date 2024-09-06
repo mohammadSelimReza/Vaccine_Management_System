@@ -3,18 +3,18 @@ const VaccineImportant = () => {
   return (
     <div className="max-w-screen-lg mx-auto my-20">
       <h1 className="md:text-2xl font-bold text-center mb-10">Frequently Asked Questions</h1>
-      <div className="flex">
+      <div className="flex flex-col md:flex-row justify-center items-center md:items-stretch">
         <div className="w-2/5">
           <img className="h-full" src={`https://res.cloudinary.com/dofqxmuya/image/upload/v1725396414/Vaccine-FAQ_bnwmf3.jpg`} alt="choose_us" />
         </div>
         <div className="w-3/5">
           <div className="collapse collapse-arrow bg-base-200">
             <input type="radio" name="my-accordion-2" defaultChecked />
-            <div className="collapse-title text-xl font-medium">
+            <div className="collapse-title text-sm md:text-xl font-medium">
               What is the recommended age for getting vaccinated?
             </div>
             <div className="collapse-content">
-              <p>
+              <p className="text-sm text-justify">
                 The recommended age for vaccination varies depending on the type
                 of vaccine. Generally, vaccines for diseases like measles,
                 mumps, and rubella (MMR) are administered to children between
@@ -26,11 +26,11 @@ const VaccineImportant = () => {
           </div>
           <div className="collapse collapse-arrow bg-base-200">
             <input type="radio" name="my-accordion-2" />
-            <div className="collapse-title text-xl font-medium">
+            <div className="collapse-title text-sm md:text-xl font-medium">
               Are there any side effects of vaccines?
             </div>
             <div className="collapse-content">
-              <p>
+              <p className="text-sm text-justify">
                 Most vaccines are safe and well-tolerated. Common side effects
                 are usually mild and include pain at the injection site, fever,
                 fatigue, or mild rash. Severe side effects are rare but can
@@ -41,11 +41,11 @@ const VaccineImportant = () => {
           </div>
           <div className="collapse collapse-arrow bg-base-200">
             <input type="radio" name="my-accordion-2" />
-            <div className="collapse-title text-xl font-medium">
+            <div className="collapse-title text-sm md:text-xl font-medium">
               Can pregnant women receive vaccines?
             </div>
             <div className="collapse-content">
-              <p>
+              <p className="text-sm text-justify">
                 Yes, some vaccines are safe and recommended for pregnant women,
                 such as the influenza (flu) vaccine and the Tdap (tetanus,
                 diphtheria, and pertussis) vaccine. However, other vaccines,

@@ -42,16 +42,14 @@ const MessageInput = styled.textarea`
 `;
 
 const SubMitButton = styled.input`
+  background-color: #5ee0df; /* Use the same color as Tailwind bg-blue-900 */
+  color: #fff; /* Matches text-white */
+  padding: 12px 25px;
+  border-radius: 5px;
+  cursor: pointer;
   position: absolute;
   bottom: 20px;
   right: 20px;
-  padding: 10px;
-  background-color: rgb(8, 8, 63);
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  padding: 12px 25px 12px 24px;
-  cursor: pointer;
 `;
 
 const InputSide = () => {

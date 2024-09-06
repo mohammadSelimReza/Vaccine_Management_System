@@ -6,7 +6,6 @@ const VaccineCategory = () => {
   const [vaccines, setVaccines] = useState([]);
   const [error, setError] = useState(null);
   useEffect(() => {
-
     // Fetch vaccine list when component mounts
     api
       .get("/vaccine/vaccine-type/")
@@ -31,6 +30,31 @@ const VaccineCategory = () => {
     speed: 2300,
     autoplaySpeed: 2000,
     cssEase: "linear",
+    responsive: [
+      {
+        breakpoint: 1024, // Below 1024px screen width
+        settings: {
+          slidesToShow: 3, // Show 3 slides
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true,
+        },
+      },
+      {
+        breakpoint: 768, // Below 768px screen width
+        settings: {
+          slidesToShow: 2, // Show 2 slides
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 480, // Below 480px screen width
+        settings: {
+          slidesToShow: 1, // Show 1 slide
+          slidesToScroll: 1,
+        },
+      },
+    ],
   };
   return (
     <div className="slider-container max-w-screen-lg mx-auto my-12">
@@ -39,9 +63,14 @@ const VaccineCategory = () => {
       <Slider {...settings}>
         {vaccines.map((vaccine) => (
           <div key={vaccine.id}>
-            <img src={`https://res.cloudinary.com/dofqxmuya/${vaccine.type_img}`} className="w-56 h-40 p-4" alt="" />
-            <h2 className="md:text-xl font-bold text-center h-10">{vaccine.vaccine_type } </h2>
-            
+            <img
+              src={`https://res.cloudinary.com/dofqxmuya/${vaccine.type_img}`}
+              className="w-full md:w-56 h-40 p-4"
+              alt=""
+            />
+            <h2 className="md:text-xl font-bold text-center h-10">
+              {vaccine.vaccine_type}{" "}
+            </h2>
           </div>
         ))}
       </Slider>

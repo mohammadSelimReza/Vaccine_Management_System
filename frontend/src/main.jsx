@@ -28,6 +28,7 @@ import DashboardCampaign from "./components/User/Profile/Dashboard/DashboardCamp
 import DashboardVaccine from "./components/User/Profile/Dashboard/DashboardVaccine/DashboardVaccine.jsx";
 import DashboardUser from "./components/User/Profile/Dashboard/DashboardUser/DashboardUser.jsx";
 import DashboardLayout from "./components/User/Profile/Dashboard/DashboardLayout/DashboardLayout.jsx";
+import DoctorNameChange from "./components/User/Profile/Dashboard/DoctorNameChange/DoctorNameChange.jsx";
 
 const router = createBrowserRouter([
   {
@@ -145,6 +146,10 @@ const router = createBrowserRouter([
           {
             path: "/dashboard/change-password",
             element: <DoctorPassChange></DoctorPassChange>
+          },
+          {
+            path: "/dashboard/change-name",
+            element: <DoctorNameChange></DoctorNameChange>
           }
         ]
       }

@@ -28,29 +28,47 @@ const Header = () => {
       </li>
       <li>
         {isAuth && (
-          <details className="dropdown">
-            {patientData ? (
-              <summary className="btn m-1">History</summary>
-            ) : (
-              <summary className="btn m-1">Edit/Add</summary>
-            )}
-            <ul className="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+          <details className="dropdown relative">
+            <summary className="cursor-pointer">
+              {patientData ? "History" : "Add"}
+            </summary>
+            <ul className="dropdown-content absolute bg-white border border-gray-200 rounded-md shadow-lg mt-2 w-52 p-2 z-10">
               {patientData ? (
                 <>
-                  <li>
-                    <NavLink to="/vaccine/report">Vaccine Report</NavLink>
+                  <li className="hover:bg-gray-100 rounded-md">
+                    <NavLink
+                      to="/vaccine/report"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:text-blue-600"
+                    >
+                      Vaccine Report
+                    </NavLink>
                   </li>
-                  <li>
-                    <NavLink to="/campaign/report">Campaign Report</NavLink>
+                  <li className="hover:bg-gray-100 rounded-md">
+                    <NavLink
+                      to="/campaign/report"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:text-blue-600"
+                    >
+                      Campaign Report
+                    </NavLink>
                   </li>
                 </>
               ) : (
                 <>
-                  <li>
-                    <NavLink to="/vaccine/edit">Edit Vaccine</NavLink>
+                  <li className="hover:bg-gray-100 rounded-md">
+                    <NavLink
+                      to="/vaccine/edit"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:text-blue-600"
+                    >
+                      Add Vaccine
+                    </NavLink>
                   </li>
-                  <li>
-                    <NavLink to="/campaign/edit">Edit Campaign</NavLink>
+                  <li className="hover:bg-gray-100 rounded-md">
+                    <NavLink
+                      to="/campaign/edit"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:text-blue-600"
+                    >
+                      Add Campaign
+                    </NavLink>
                   </li>
                 </>
               )}
@@ -110,7 +128,8 @@ const Header = () => {
                 {" "}
                 <img
                   src={
-                    doctorData?.user_photo || patientData?.user_photo || "N/A"
+                    patientData?.user_photo ||
+                    "https://res.cloudinary.com/dofqxmuya/image/upload/v1725378249/default_user_i0wpzv.png"
                   }
                   className="w-10 h-10 rounded-full"
                   alt=""
@@ -127,7 +146,8 @@ const Header = () => {
                 {" "}
                 <img
                   src={
-                    doctorData?.user_photo || patientData?.user_photo || "N/A"
+                    doctorData?.user_photo ||
+                    "https://res.cloudinary.com/dofqxmuya/image/upload/v1725378249/default_user_i0wpzv.png"
                   }
                   className="w-10 h-10 rounded-full"
                   alt=""

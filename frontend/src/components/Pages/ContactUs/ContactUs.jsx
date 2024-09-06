@@ -15,7 +15,7 @@ const PageHeadingWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 40px;
-  margin-bottom:40px;
+  margin-bottom: 40px;
 `;
 
 const FormContainer = styled.div`
@@ -27,28 +27,44 @@ const FormContainer = styled.div`
   display: flex;
   @media (max-width: 768px) {
     width: 90%;
+    flex-direction: column; /* Stack vertically on smaller screens */
+    height: auto; /* Auto height on smaller screens */
   }
 `;
 
 const StyledDetailsBar = styled.div`
   width: 50%;
-  hight:70vh;
+  height: 100%;
+  @media (max-width: 768px) {
+    width: 100%; /* Full width on smaller screens */
+    margin-bottom: 20px; /* Add spacing between sections */
+  }
 `;
 
 const StyledInputSide = styled.div`
   width: 50%;
+  height: 100%;
+  @media (max-width: 768px) {
+    width: 100%; /* Full width on smaller screens */
+  }
 `;
 
 const TextOne = styled.b`
   font-size: 30px;
   color: rgb(4, 4, 59);
   text-align: center;
+  @media (max-width: 768px) {
+    font-size: 24px; /* Smaller font size on smaller screens */
+  }
 `;
 
 const TextTwo = styled.p`
   color: rgb(4, 4, 34);
   font-size: 15px;
   text-align: center;
+  @media (max-width: 768px) {
+    font-size: 13px; /* Smaller font size on smaller screens */
+  }
 `;
 
 const ContactUs = () => {

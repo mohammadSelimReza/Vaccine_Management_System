@@ -258,13 +258,13 @@ const Vaccine = () => {
                       <div className="flex gap-4">
                         <button
                           onClick={() => handleEditClick(vaccine)}
-                          className="text-white bg-blue-500 hover:bg-blue-700 w-full py-3 rounded-md text-sm font-medium"
+                          className="text-white bg-blue-500 hover:bg-blue-700 w-20 py-3 rounded-md text-sm font-medium"
                         >
                           Edit
                         </button>
                         <button
                           onClick={() => handleDelete(vaccine)}
-                          className="text-white bg-red-500 hover:bg-blue-700 w-full py-3 rounded-md text-sm font-medium"
+                          className="text-white bg-red-500 hover:bg-blue-700 w-20 py-3 rounded-md text-sm font-medium"
                         >
                           Delete
                         </button>

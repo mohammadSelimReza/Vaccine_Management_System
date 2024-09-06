@@ -34,6 +34,31 @@ const PeopleComments = () => {
     speed: 2300,
     autoplaySpeed: 2000,
     cssEase: "linear",
+    responsive: [
+      {
+        breakpoint: 1024, // Below 1024px screen width
+        settings: {
+          slidesToShow: 3, // Show 3 slides
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true,
+        },
+      },
+      {
+        breakpoint: 768, // Below 768px screen width
+        settings: {
+          slidesToShow: 2, // Show 2 slides
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 480, // Below 480px screen width
+        settings: {
+          slidesToShow: 1, // Show 1 slide
+          slidesToScroll: 1,
+        },
+      },
+    ],
   };
 
   return (
@@ -43,7 +68,7 @@ const PeopleComments = () => {
       </h2>
       <Slider {...settings}>
         {vaccines.map((vaccine) => (
-          <div key={vaccine.id} className="shadow-lg rounded-lg p-4 mb-4 h-52 p-10 bg-white">
+          <div key={vaccine.id} className="shadow-lg rounded-lg p-4 mb-4 h-60 p-10 bg-white">
             <div className="flex items-start">
               <div className="flex-shrink-0">
                 <div className="inline-block relative">

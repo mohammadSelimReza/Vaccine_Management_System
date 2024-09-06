@@ -85,8 +85,8 @@ const VaccineAdd = () => {
 
   return (
     <div className="container mx-auto p-4">
-        <h2 className="text-xl font-semibold mb-4">Existing Vaccines</h2>
-      <table className="min-w-full bg-white">
+        {/* <h2 className="text-xl font-semibold mb-4">Existing Vaccines</h2> */}
+      {/* <table className="min-w-full bg-white">
         <thead>
           <tr>
             <th className="py-2 px-4 bg-gray-200 font-bold uppercase text-sm text-gray-600">
@@ -139,8 +139,8 @@ const VaccineAdd = () => {
             </tr>
           ))}
         </tbody>
-      </table>
-      <h1 className="text-2xl font-bold mb-4">Vaccine List</h1>
+      </table> */}
+      {/* <h1 className="text-2xl font-bold mb-4">Vaccine List</h1> */}
 
       <form
         onSubmit={handleSubmit}

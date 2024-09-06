@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import * as Icon from 'react-feather';
 
 const DetailsBarWrapper = styled.div`
-  background-color: rgb(8, 8, 63);
+  background-color: #5ee0df; /* Matches the button color */
   border-radius: 7px;
   position: relative;
   padding: 30px;
@@ -12,12 +12,12 @@ const DetailsBarWrapper = styled.div`
   align-items: center;
   height: 70vh;
   padding-bottom: 100px;
+  color: black; /* Adjusted to contrast with the background */
   @media (max-width: 768px) {
     padding-bottom: 80px;
     grid-row: 2;
   }
 `;
-
 const TextWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -26,14 +26,14 @@ const TextWrapper = styled.div`
 
 const TextOne = styled.p`
   text-align: center;
-  color: #fff;
+  color: black;
   font-size: 18px;
   font-weight: bold;
 `;
 
 const TextTwo = styled.p`
   text-align: center;
-  color: #fff;
+  color: black;
   font-size: 12px;
   line-height: 18px;
 `;
@@ -42,7 +42,7 @@ const BigCircle = styled.div`
   height: 50px;
   margin-top: 30px;
   width: 50px;
-  background-color: rgb(100, 21, 173);
+  background-color: rgb(252, 113, 137); /* Accent color */
   border-radius: 100%;
   z-index: 22;
   margin-left: 10px;
@@ -51,7 +51,7 @@ const BigCircle = styled.div`
 const SmallCircle = styled.div`
   position: absolute;
   margin-left: 10px;
-  background-color: rgb(252, 113, 137);
+  background-color: rgb(100, 21, 173); /* Secondary accent color */
   border-radius: 100%;
   height: 30px;
   width: 30px;
@@ -69,8 +69,7 @@ const ContactsWrapper = styled.a`
 `;
 
 const ContactText = styled.div`
-  color: #fff;
-
+  color: black;
   font-size: 15px;
   margin-left: 10px;
 `;
@@ -78,9 +77,7 @@ const ContactText = styled.div`
 const SocialsWrapper = styled.div`
   display: flex;
   justify-content: center;
-  display: flex;
   height: 10px;
-  justify-content: center;
   bottom: 30px;
   position: absolute;
   cursor: pointer;
@@ -94,10 +91,9 @@ const SocialIconWrapper = styled.a`
   justify-content: center;
   align-items: center;
   &:hover {
-    background-color: rgb(252, 113, 137);
+    background-color: rgb(252, 113, 137); /* Hover color */
   }
 `;
-
 const DetailsBar = () => {
   return (
     <DetailsBarWrapper>

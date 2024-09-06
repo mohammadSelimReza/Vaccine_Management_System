@@ -50,7 +50,7 @@ const DoctorUpBio = () => {
         setSuccess(false);
 
         try {
-            const response = await api.patch(`/user/patients/${user.id}/`, formData);
+            const response = await api.patch(`/user/doctors/${user.id}/`, formData);
 
             if (response.status === 200) {
                 setSuccess(true);
@@ -62,7 +62,7 @@ const DoctorUpBio = () => {
         } finally {
             setLoading(false);
             toast.success("Profile updated successfully.");
-            navigate("/profile");
+            navigate("/dashboard/about");
         }
     };
 
