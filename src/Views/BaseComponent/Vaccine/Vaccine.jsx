@@ -224,7 +224,9 @@ const Vaccine = () => {
   };
   return (
     <>
+      <div className="relative z-50">
       <BaseHeader />
+      </div>
       <div className="md:max-w-7xl mx-auto my-10">
         <h1 className="text-2xl text-center font-bold mb-8">
           Vaccine We Provided

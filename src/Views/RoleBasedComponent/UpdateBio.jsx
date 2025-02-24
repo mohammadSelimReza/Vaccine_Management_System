@@ -74,11 +74,11 @@ const UserBioUpdate = () => {
     <div>
       <BaseHeader />
       <Header />
-      <div className="flex max-w-screen-xl mx-auto">
+      <div className="flex flex-col md:flex-row max-w-screen-xl mx-auto">
         <div className="w-1/4">
           <Sidebar />
         </div>
-        <div className="flex w-3/4 md:mb-10">
+        <div className="flex w-3/4 mb-10 mx-auto">
           <form onSubmit={handleSubmit} className=" mx-auto">
             <h1 className="md:text-2xl font-bold text-center mb-10">
               Update Your Profile

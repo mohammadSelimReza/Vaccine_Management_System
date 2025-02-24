@@ -42,14 +42,16 @@ const BaseFooter = () => {
           </nav>
           <div className="text-xl font-bold text-center">
             <FaPhoneAlt className="inline-block mr-2" />
-            +1-795-5582-795
+            <div>
+            <p>+1-795-5582-795</p>
             <p className="text-sm">Emergency Hotline 24/7</p>
+            </div>
           </div>
         </div>
         <div className="space-y-4 flex flex-col items-center lg:items-end text-gray-200">
           <div className="flex items-start gap-4">
             <FaMapMarkerAlt className="text-2xl text-blue-400" />
-            <div className="text-right">
+            <div className="text-center md:text-right">
               <p className="font-bold">Head Office Location:</p>
               <p>9873 Ridgewood Street</p>
               <p>Elgin, IL 60120</p>
@@ -58,7 +60,7 @@ const BaseFooter = () => {
 
           <div className="flex items-start gap-4">
             <FaEnvelope className="text-2xl text-blue-400" />
-            <div className="text-right">
+            <div className="flex sm:block gap-2 text-right">
               <p className="font-bold">Email:</p>
               <p>info@vaxi.com</p>
             </div>

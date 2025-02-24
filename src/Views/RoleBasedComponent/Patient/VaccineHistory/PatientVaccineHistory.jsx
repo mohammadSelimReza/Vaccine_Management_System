@@ -6,18 +6,22 @@ import BaseFooter from "../../../PartialComponent/BaseFooter";
 import useUserProfile from "../../../../plugin/UserProfile";
 import authApiInstance from "../../../../Utils/authApiInstance";
 const VaccineReport = () => {
-  const [bookedVaccine, setBookedVaccine] = useState([]);
-  const [selectVaccine, setSelectVaccine] = useState([]);
+  const [vaccineList, setVaccineList] = useState([]);
+  const [bookList, setBookList] = useState([]);
+  const [selectedVaccine, setSelectedVaccine] = useState([]);
   const { patient, loading, setLoading } = useUserProfile();
-  console.log(patient);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const bookedResponse = await authApiInstance().get(
-          "/vaccine/book-vaccine/"
-        );
-        setBookedVaccine(bookedResponse.data);
+        // Fetch data in parallel for efficiency
+        const [vaccineRes, bookedRes] = await Promise.all([
+          authApiInstance().get("/vaccine/list/"),
+          authApiInstance().get("/vaccine/book-vaccine/"),
+        ]);
+
+        setVaccineList(vaccineRes.data);
+        setBookList(bookedRes.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -25,40 +29,32 @@ const VaccineReport = () => {
 
     fetchData();
   }, []);
-
   // Filter vaccines based on user ID
   useEffect(() => {
-    if (bookedVaccine.length > 0 && patient?.user?.id) {
-      const selected = bookedVaccine.filter(
+    if (bookList.length > 0 && patient?.user?.id) {
+      const selected = bookList.filter(
         (item) => item.user === patient.user.id
       );
-      setSelectVaccine(selected);
+      setSelectedVaccine(selected);
     }
-  }, [bookedVaccine, patient]);
-
-  console.log("bookedVaccine:", bookedVaccine);
-  console.log("selectVaccine:", selectVaccine);
-
+  }, [vaccineList, patient?.user?.id]);
   // Function to get vaccine details by ID
   const getVaccineDetails = (vaccineId) => {
-    console.log("Vaccine ID:", vaccineId);
-    console.log("Selected Vaccines:", selectVaccine);
-    const vaccine = selectVaccine.find((v) => v.id === vaccineId);
-    console.log(vaccine);
+    const vaccine = vaccineList.find((v) => v.id === vaccineId);
+    console.log(vaccine.vaccine_name);
     return vaccine ? vaccine.vaccine_name : "Unknown";
   };
 
   // Function to get dose count by ID
   const getDoseCount = (vaccineId) => {
-    const vaccine = selectVaccine.find((v) => v.id === vaccineId);
+    const vaccine = vaccineList.find((v) => v.id === vaccineId);
     return vaccine ? vaccine.dose_count : "Unknown";
   };
-  console.log("mew ew",selectVaccine);
   return (
     <>
       <BaseHeader />
       <Header />
-      <div className="flex max-w-screen-xl mx-auto">
+      <div className="flex flex-col md:flex-row md:flex-row max-w-screen-xl mx-auto">
         <div className="w-1/4">
           <Sidebar />
         </div>
@@ -78,7 +74,7 @@ const VaccineReport = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {selectVaccine.map((vaccin) => (
+                  {selectedVaccine.map((vaccin) => (
                     <tr key={vaccin.id}>
                       <td>{vaccin.patient_name}</td>
                       <td>{vaccin.patient_age}</td>

@@ -58,74 +58,87 @@ const CampaignReport = () => {
     <>
       <BaseHeader />
       <Header />
-      <div className="flex flex-col lg:flex-row max-w-7xl mx-auto px-4 py-6">
-        <div className="lg:w-1/4 w-full mb-4 lg:mb-0">
-          <Sidebar />
-        </div>
-        <div className="lg:w-3/4 w-full">
-          <div className="bg-white rounded-lg shadow-lg overflow-x-auto p-4">
-            {loading ? (
-              <div className="flex justify-center items-center">
-                <span className="w-16 h-16 loading loading-spinner text-warning"></span>
-              </div>
-            ) : (
-              <>
-                <table className="table-auto w-full border-collapse">
-                  <thead>
-                    <tr className="bg-gray-100">
-                      <th className="text-left py-2 px-4 border-b">Patient Name</th>
-                      <th className="text-left py-2 px-4 border-b">Registered Campaign</th>
-                      <th className="text-left py-2 px-4 border-b">Campaign's Vaccine</th>
-                      <th className="text-left py-2 px-4 border-b">Status</th>
-                    </tr>
-                  </thead>
 
-                  {bookedCampaign.length === 0 && (
-                    <tbody>
-                      <tr>
-                        <td colSpan="4" className="text-center py-4">
-                          No booked campaigns found.
-                        </td>
-                      </tr>
-                    </tbody>
-                  )}
-                  <tbody>
-                    {bookedCampaign.map((campaign) => (
-                      <tr key={campaign.id} className="hover:bg-gray-50">
-                        <td className="py-2 px-4 border-b">{campaign.patient_name}</td>
-                        <td className="py-2 px-4 border-b">{getCampaignName(campaign.campaign_name)}</td>
-                        <td className="py-2 px-4 border-b">
-                          {providedVaccine.find(
-                            (vaccine) => vaccine.id === campaign.campaign_name
-                          )?.vaccine_name || "N/A"}
-                        </td>
-                        <td className="py-2 px-4 border-b">
-                          {hasReviewed(campaign.patient_name) ? (
-                            <span className="text-green-600">Reviewed Before</span>
-                          ) : (
-                            <button
-                              onClick={() =>
-                                handleNavigate(
-                                  campaign.patient_name,
-                                  getCampaignName(campaign.campaign_name),
-                                  campaign.campaign_name 
-                                )
-                              }
-                              className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded-lg transition duration-200"
-                            >
-                              Give Feedback
-                            </button>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </>
-            )}
-          </div>
+      {/* Main Container */}
+      <div className="flex flex-col lg:flex-row md:max-w-7xl mx-auto px-4 py-6 gap-6">
+  
+  {/* Sidebar - Full width on small screens, 1/4 width on large */}
+  <div className="w-full md:w-1/4">
+    <Sidebar />
+  </div>
+
+  {/* Main Content */}
+  <div className="w-full md:w-3/4">
+    <div className="bg-white rounded-lg shadow-lg overflow-hidden p-4">
+      
+      {/* Loading Spinner */}
+      {loading ? (
+        <div className="flex justify-center items-center py-6">
+          <span className="w-16 h-16 loading loading-spinner text-warning"></span>
         </div>
-      </div>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="table-auto w-full border-collapse">
+            <thead>
+              <tr className="bg-gray-100 text-sm md:text-base">
+                <th className="text-left py-2 px-3 border-b">Patient Name</th>
+                <th className="text-left py-2 px-3 border-b">Registered Campaign</th>
+                <th className="text-left py-2 px-3 border-b">Campaign's Vaccine</th>
+                <th className="text-left py-2 px-3 border-b">Status</th>
+              </tr>
+            </thead>
+
+            {/* No data found */}
+            {bookedCampaign.length === 0 && (
+              <tbody>
+                <tr>
+                  <td colSpan="4" className="text-center py-4">
+                    No booked campaigns found.
+                  </td>
+                </tr>
+              </tbody>
+            )}
+
+            {/* Data Rows */}
+            <tbody>
+              {bookedCampaign.map((campaign) => (
+                <tr key={campaign.id} className="hover:bg-gray-50 text-sm md:text-base">
+                  <td className="py-2 px-3 border-b">{campaign.patient_name}</td>
+                  <td className="py-2 px-3 border-b">{getCampaignName(campaign.campaign_name)}</td>
+                  <td className="py-2 px-3 border-b">
+                    {providedVaccine.find(
+                      (vaccine) => vaccine.id === campaign.campaign_name
+                    )?.vaccine_name || "N/A"}
+                  </td>
+                  <td className="py-2 px-3 border-b">
+                    {hasReviewed(campaign.patient_name) ? (
+                      <span className="text-green-600">Reviewed Before</span>
+                    ) : (
+                      <button
+                        onClick={() =>
+                          handleNavigate(
+                            campaign.patient_name,
+                            getCampaignName(campaign.campaign_name),
+                            campaign.campaign_name 
+                          )
+                        }
+                        className="bg-blue-500 hover:bg-blue-600 text-white text-xs md:text-sm py-1 px-2 md:px-3 rounded-lg transition duration-200"
+                      >
+                        Give Feedback
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  </div>
+</div>
+
+
       <BaseFooter />
     </>
   );

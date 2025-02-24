@@ -3,6 +3,7 @@ import {  patientRegister } from "../../Utils/useAuth";
 import Toast from "../../plugin/useToast";
 import BaseHeader from "../PartialComponent/BaseHeader";
 import BaseFooter from "../PartialComponent/BaseFooter";
+import { useNavigate } from "react-router";
 
 const PatientRegister = ({ route, method }) => {
   // User Information
@@ -64,7 +65,7 @@ const PatientRegister = ({ route, method }) => {
   const handleImage = (event) => {
     uploadPhoto(event.target.files[0]);
   };
-
+  const navigate = useNavigate();
   const uploadPhoto = async (file) => {
     setUploadingPhoto(true); // Set uploading to true when starting the upload
     const formData = new FormData();
@@ -280,6 +281,7 @@ const PatientRegister = ({ route, method }) => {
           icon: "success",
         });
         setProccesing(false)
+        navigate("/");
       } catch (error) {
         console.log(error);
         setProccesing(false)

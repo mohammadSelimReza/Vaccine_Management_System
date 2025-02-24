@@ -13,8 +13,10 @@ import VideoShowing from "./VideoShowing/VideoShowing";
 
 const Index = () => {
   return (
-    <div>
-      <BaseHeader />
+    <div className="relative">
+      <div className="relative z-50">
+        <BaseHeader />
+      </div>
       <div className="relative lg:mb-96">
         <Banner />
         <div className="md:absolute md:-bottom-2/3 md:left-1/2 md:transform md:-translate-x-1/2 mb-4">

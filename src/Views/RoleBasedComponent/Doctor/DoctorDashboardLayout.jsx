@@ -1,28 +1,21 @@
-import { Outlet } from "react-router";
-import DashHeader from "./DashHeader";
+import { Link, Outlet } from "react-router";
 import DashFooter from "./DashFooter";
 import DashSidebar from "./DashSidebar";
 
 const DoctorDashboardLayout = () => {
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Header */}
-      <DashHeader />
-
-      {/* Main Content Section */}
-      <main className="flex flex-grow">
-        {/* Sidebar */}
-        <div className="w-64 flex-shrink-0">
+      <main className="relative flex flex-grow">
+        <div className="absolute top-8 md:relative md:w-64 flex-shrink-0">
           <DashSidebar />
         </div>
-
-        {/* Main Content (Outlet) */}
-        <div className="flex-grow p-6 bg-gray-100 md:pt-32">
+        <div className="flex-grow bg-gray-100">
+          <Link to='/'>
+          <h1 className="text-center text-3xl md:text-4xl font-bold pt-10 md:pt-6">VacciHub</h1>
+          </Link>
           <Outlet />
         </div>
       </main>
-
-      {/* Footer */}
       <DashFooter />
     </div>
   );
