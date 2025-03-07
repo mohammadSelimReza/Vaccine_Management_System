@@ -4,12 +4,12 @@ const DoctorProfile = () => {
   const { doctor } = useUserProfile();
 
   return (
-    <div className="max-w-6xl md:mt-32 mx-auto bg-white shadow-lg rounded-lg p-6 md:p-10">
+    <div className="max-w-full md:max-w-6xl mx-auto bg-white shadow-lg rounded-lg p-6 md:p-10">
       <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">My Profile</h1>
 
       <div className="flex flex-col md:flex-row gap-8">
         {/* Left Section: Profile Details */}
-        <div className="flex-1">
+        <div className="flex-1 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <ProfileField label="Username" value={doctor?.user?.username} />
             <ProfileField
@@ -38,14 +38,18 @@ const DoctorProfile = () => {
         </div>
 
         {/* Right Section: Profile Photo */}
-        <div className="flex flex-col items-center">
-          <h2 className="text-xl font-semibold mb-4 text-gray-800">Profile Photo</h2>
-          <div className="w-40 h-40 md:w-48 md:h-48 rounded-full overflow-hidden border-2 border-gray-300 shadow-lg">
-            <img
-              src={doctor?.user_photo || "/default-profile.png"}
-              alt="Profile"
-              className="w-full h-full object-cover"
-            />
+        <div className="flex justify-center md:justify-start md:w-1/4">
+          <div className="w-full max-w-xs md:max-w-none">
+            <h2 className="text-xl font-semibold mb-4 text-gray-800 text-center md:text-left">
+              Profile Photo
+            </h2>
+            <div className="w-40 h-40 md:w-48 md:h-48 rounded-full overflow-hidden border-2 border-gray-300 shadow-lg mx-auto md:mx-0">
+              <img
+                src={doctor?.user_photo || "/default-profile.png"}
+                alt="Profile"
+                className="w-full h-full object-cover"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -57,8 +61,8 @@ const DoctorProfile = () => {
 // eslint-disable-next-line react/prop-types
 const ProfileField = ({ label, value }) => (
   <div className="flex flex-col md:flex-row items-start md:items-center">
-    <label className="text-gray-700 font-semibold w-40">{label}:</label>
-    <p className="text-gray-900">{value}</p>
+    <label className="text-gray-700 font-semibold w-full md:w-40">{label}:</label>
+    <p className="text-gray-900 w-full">{value}</p>
   </div>
 );
 

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import publicApiInstance from "../../Utils/publicApiInstance";
 import Toast from "../../plugin/useToast";
+import BaseHeader from "../PartialComponent/BaseHeader";
+import BaseFooter from "../PartialComponent/BaseFooter";
 
 const DoctorRegistraition = () => {
   const [username, setUsername] = useState("");
@@ -353,6 +355,7 @@ const DoctorRegistraition = () => {
 
   return (
     <div>
+      <BaseHeader/>
       <section>
         <div className="max-w-4xl mx-auto font-[sans-serif] p-6">
           <div className="text-center mb-16">
@@ -743,6 +746,7 @@ const DoctorRegistraition = () => {
           </form>
         </div>
       </section>
+      <BaseFooter/>
     </div>
   );
 };

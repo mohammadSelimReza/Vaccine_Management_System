@@ -1,7 +1,8 @@
+import { Link } from "react-router";
 
 const VaccineInfo = () => {
   return (
-    <div className="max-w-screen-xl mx-auto bg-white p-6 md:p-12 flex flex-col md:flex-row items-center gap-8">
+    <div className="max-w-screen-xl mx-auto bg-white my-20 flex flex-col md:flex-row items-center gap-8">
       {/* Image Section */}
       <div className="w-full md:w-1/2">
         <img
@@ -26,12 +27,11 @@ const VaccineInfo = () => {
         </p>
 
         {/* CTA Link */}
-        <a
-          href="https://www.cdc.gov/coronavirus/2019-ncov/vaccines/index.html"
-          className="text-primary font-semibold mt-4 inline-flex items-center"
-        >
-          Learn More &rarr;
-        </a>
+        <div className="mx-auto my-10">
+        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+            <Link to='/vaccine/list'>Check Our Vaccine</Link>
+          </button>
+        </div>
       </div>
     </div>
   );

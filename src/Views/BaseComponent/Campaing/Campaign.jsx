@@ -5,7 +5,7 @@ import BaseHeader from "../../PartialComponent/BaseHeader";
 import BaseFooter from "../../PartialComponent/BaseFooter";
 import useUserProfile from "../../../plugin/UserProfile";
 import Toast from "../../../plugin/useToast";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 const Campaign = () => {
   const [campaign, setCampaign] = useState([]);
@@ -36,7 +36,7 @@ const Campaign = () => {
     publicApiInstance
       .get("/vaccine/list/")
       .then((res) => {
-        setVaccineData(res.data);
+        setVaccineData(res.data.results);
       })
       .catch((err) => {
         setError(err.message);
@@ -113,9 +113,14 @@ const Campaign = () => {
   };
   return (
     <>
+      <div className="flex flex-col min-h-screen">
+      {/* Header */}
       <div className="relative z-50">
-      <BaseHeader />
+        <BaseHeader />
       </div>
+
+      {/* Main Content - Takes remaining space */}
+      <div className="flex-grow">
       <div>
         <div className="md:max-w-7xl mx-auto my-10">
           <h1 className="text-2xl text-center font-bold mb-8">
@@ -350,13 +355,21 @@ const Campaign = () => {
                         Target Population: {vaccine.target_population}
                       </p>
                       <div className="card-actions">
+                        {!patient && !doctor &&  (
+                           <Link
+                           to="/login"
+                           className="text-white bg-blue-500 hover:bg-blue-700 w-full px-3 py-3 rounded-md text-sm font-medium"
+                            >
+                           Login to Check
+                          </Link>
+                        )}
                         {patient && (
-                          <button
-                            className="btn btn-primary"
-                            onClick={() => handleBookNowClick(vaccine)}
-                          >
-                            Book Now
-                          </button>
+                           <Link
+                                        to="/login"
+                                        className="text-white bg-blue-500 hover:bg-blue-700 w-full px-3 py-3 rounded-md text-sm font-medium"
+                                    >
+                                        Login to Book
+                                    </Link>
                         )}
 
                         {doctor && (
@@ -378,7 +391,11 @@ const Campaign = () => {
           )}
         </div>
       </div>
+      </div>
+
+      {/* Footer at Bottom */}
       <BaseFooter />
+    </div>
     </>
   );
 };

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import useUserProfile from "../../../plugin/UserProfile";
 import CountUp from "react-countup";
 import authApiInstance from "../../../Utils/authApiInstance";
+import publicApiInstance from "../../../Utils/publicApiInstance";
 
 const DoctorDashboard = () => {
   const { doctor } = useUserProfile();
@@ -11,25 +12,24 @@ const DoctorDashboard = () => {
   const [totalTarget, setTotalTarget] = useState(0);
   const [totalPatients, setTotalPatients] = useState(0);
   const [progress, setProgress] = useState(0);
-
+  const fetchTotal = async()=>{
+    try {
+      const vaccineCount = await authApiInstance().get("/vaccine/total-vaccines/");
+      const campaignRes = await authApiInstance().get("/vaccine/total-campaigns/");
+      const userRes = await authApiInstance().get("/user/users/");
+      const bookRes = await authApiInstance().get("/vaccine/total-campaigns-book/");
+      console.log(vaccineCount.data.total_vaccine);
+      setTotalVaccine(vaccineCount.data.total_vaccine);
+      setTotalCampaign(campaignRes.data.total_campaign);
+      setTotalTarget(campaignRes.data.target_count);
+      setTotalUser(userRes.data.length);
+      setTotalPatients(bookRes.data.total_booked);
+    } catch (error) {
+      
+    }
+  }
   useEffect(() => {
-    const fetchTotal = async () => {
-      try {
-        const [userRes, vaccineRes, campaignRes, campaignBookRes] = await Promise.all([
-          authApiInstance().get("/user/total-patients/"),
-          authApiInstance().get("/vaccine/total-vaccines/"),
-          authApiInstance().get("/vaccine/total-campaigns/"),
-          authApiInstance().get("/vaccine/total-campaigns-book/")
-        ]);
-        setTotalUser(userRes.data.total_patients);
-        setTotalVaccine(vaccineRes.data.total_vaccine);
-        setTotalCampaign(campaignRes.data.total_campaign);
-        setTotalTarget(campaignRes.data.target_count);
-        setTotalPatients(campaignBookRes.data.total_booked);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+
     fetchTotal();
   }, []);
   useEffect(() => {
@@ -47,9 +47,9 @@ const DoctorDashboard = () => {
   }, [totalPatients]);
 
   const percentage = (progress / totalTarget) * 100;
-
+  console.log(totalVaccine)
   return (
-    <div className="pt-20 text-center md:px-40">
+    <div className="pt-20 text-start md:px-40">
       <h1 className="text-xl font-semibold">Welcome, Dr. {doctor?.user.first_name} {doctor?.user.last_name}</h1>
       <div className="grid gap-6 md:grid-cols-3 mt-8">
         <div className="stat bg-white shadow-lg p-6 rounded-lg">

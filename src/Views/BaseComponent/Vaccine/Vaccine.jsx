@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import useUserProfile from "../../../plugin/UserProfile";
 import publicApiInstance from "../../../Utils/publicApiInstance";
 import authApiInstance from "../../../Utils/authApiInstance";
@@ -10,568 +10,177 @@ import BaseFooter from "../../PartialComponent/BaseFooter";
 const Vaccine = () => {
   const [vaccines, setVaccines] = useState([]);
   const [error, setError] = useState(null);
-  const [selectedVaccine, setSelectedVaccine] = useState(null);
-  const [patientAge, setPatientAge] = useState("");
-  const [appointmentDate, setAppointmentDate] = useState("");
-  const [remainingDates, setRemainingDates] = useState([]);
-  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [patientName, setPatientName] = useState("");
-  const [formData, setFormData] = useState({
-    vaccine_name: "",
-    slug: "",
-    manufacturer: "",
-    dosage: "",
-    dose_count: "",
-    dose_gap_days: "",
-    storage_temperature: "",
-    expiration_date: "",
-    description: "",
-    vaccine_for: "",
-    vaccine_type: "",
-    added_by: 1,
-  });
-
+  const [filter, setFilter] = useState("None");
+  const [sort,setSort] = useState("None")
   const { setLoading, loading, doctor, patient } = useUserProfile();
-  console.log(doctor, patient);
-  useEffect(() => {
+  const [pageCount,setPageCount] = useState(1);
+  const [page,setPage] = useState(1);
+  const fetchVaccineData = async () => {
     setLoading(true);
-    publicApiInstance
-      .get("/vaccine/list/")
-      .then((response) => {
-        setVaccines(response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("There was an error fetching the vaccine data!", error);
-        setLoading(false);
-      });
-  }, []);
-
-  const generateSlug = (name) => {
-    return name
-      .toLowerCase()
-      .replace(/ /g, "-")
-      .replace(/[^\w-]+/g, "");
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    if (name === "vaccine_name") {
-      setFormData({
-        ...formData,
-        [name]: value,
-        slug: generateSlug(value),
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    }
-  };
-
-  const handleSubmit = (e) => {
-    setLoading(true);
-    e.preventDefault();
-
-    authApiInstance()
-      .patch(`/vaccine/list/${selectedVaccine.id}/`, formData)
-      .then((response) => {
-        // Refresh the vaccine list after editing the vaccine
-        setVaccines(
-          vaccines.map((vaccine) =>
-            vaccine.id === response.data.id ? response.data : vaccine
-          )
-        );
-        // Clear the form
-        setFormData({
-          vaccine_name: "",
-          slug: "",
-          manufacturer: "",
-          dosage: "",
-          dose_count: "",
-          dose_gap_days: "",
-          storage_temperature: "",
-          expiration_date: "",
-          description: "",
-          vaccine_for: "",
-          vaccine_type: "",
-          added_by: 1,
-        });
-        setIsEditModalOpen(false);
-      })
-      .catch((error) => {
-        console.error("There was an error editing the vaccine!", error);
-      });
-    setLoading(false);
-  };
-  const handleDelete = (vaccine) => {
-    loading(true);
-    tryDelete(vaccine);
-    setLoading(false);
-  };
-
-  const tryDelete = (vaccine) => {
-    if (vaccine) {
-      authApiInstance()
-        .delete(`/vaccine/list/${vaccine.id}/`)
+    try {
+      await publicApiInstance
+        .get(`/vaccine/list/?page=${page}&type=${filter}&ordering=${sort}`)
         .then((response) => {
-          // Remove the deleted vaccine from the list
-          setVaccines(vaccines.filter((v) => v.id !== vaccine.id));
-          alert("Vaccine deleted successfully!");
+          setVaccines(response.data.results);
+          setPageCount(Math.ceil(response.data.count/6));
+          setLoading(false);
         })
         .catch((error) => {
-          console.error("There was an error deleting the vaccine!", error);
-          alert("Error deleting vaccine. Please try again.");
+          console.error("There was an error fetching the vaccine data!", error);
+          setLoading(false);
         });
-    } else {
-      console.log("Vaccine Not selected!");
+    } catch (error) {
+      console.error("There was an error fetching the vaccine data!", error);
+      setLoading(false);
     }
-  };
-
+  }
   useEffect(() => {
-    if (appointmentDate && selectedVaccine) {
-      const dates = calculateRemainingDates(
-        appointmentDate,
-        selectedVaccine.dose_gap_days,
-        selectedVaccine.dose_count
-      );
-      setRemainingDates(dates);
-    }
-  }, [appointmentDate, selectedVaccine]);
-
-  const calculateRemainingDates = (startDate, doseGapDays, doseCount) => {
-    if (!startDate || doseCount <= 0 || doseGapDays <= 0) return [];
-
-    const remainingDates = [];
-    const start = new Date(startDate);
-
-    if (isNaN(start.getTime())) {
-      console.error("Invalid startDate provided:", startDate);
-      return [];
-    }
-
-    for (let i = 1; i < doseCount; i++) {
-      const nextDate = new Date(start);
-      nextDate.setDate(start.getDate() + doseGapDays * i);
-      remainingDates.push(nextDate.toISOString().split("T")[0]);
-    }
-
-    return remainingDates;
-  };
-
-  const handleBookNowClick = (vaccine) => {
-    setSelectedVaccine(vaccine);
-    setIsBookingModalOpen(true);
-  };
-
-  const handleEditClick = (vaccine) => {
+    fetchVaccineData();
+  }, [page]);
+  const resetfilet = async () => {
+    console.log(filter);
     setLoading(true);
-    setSelectedVaccine(vaccine);
-    setFormData({
-      vaccine_name: vaccine.vaccine_name,
-      slug: vaccine.slug,
-      manufacturer: vaccine.manufacturer,
-      dosage: vaccine.dosage,
-      dose_count: vaccine.dose_count,
-      dose_gap_days: vaccine.dose_gap_days,
-      storage_temperature: vaccine.storage_temperature,
-      expiration_date: vaccine.expiration_date,
-      description: vaccine.description,
-      vaccine_for: vaccine.vaccine_for,
-      vaccine_type: vaccine.vaccine_type,
-      added_by: vaccine.added_by,
-    });
-    setIsEditModalOpen(true);
-    setLoading(true);
-  };
-
-  const handleBookingSubmit = () => {
-    if (!patientName || !patientAge || !appointmentDate || !selectedVaccine) {
-      alert("Please fill in all fields before submitting.");
-      return;
-    }
-    setLoading(true);
-    const bookingData = {
-      user: patient?.user?.id,
-      patient_name: patientName,
-      patient_age: patientAge,
-      vaccine: selectedVaccine.id,
-      first_dose_date: appointmentDate,
-    };
-    console.log(JSON.stringify(bookingData));
-    authApiInstance()
-      .post("/vaccine/book-vaccine/", bookingData)
-      .then((res) => {
-        Toast().fire({
-          title: "Vaccine booking successfully!",
-          icon: "success",
+    setFilter("None");
+    setSort("None");
+    setPage(1);
+    try {
+      await publicApiInstance
+        .get(`/vaccine/list/`)
+        .then((response) => {
+          setVaccines(response.data.results);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("There was an error fetching the vaccine data!", error);
+          setLoading(false);
         });
-        setIsBookingModalOpen(false);
-        setPatientAge("");
-        setAppointmentDate("");
-        setRemainingDates([]);
-        setLoading(false);
-      })
-      .catch((err) => {
-        Toast().fire({
-          title: `${err.error}`,
-          icon: "error",
-        });
-        setIsBookingModalOpen(false);
-      });
+    } catch (error) {
+      console.error("There was an error fetching the vaccine data!", error);
+      setLoading(false);
+    }
+  }
+  const handleSortChange = (e) => {
+    setSort(e.target.value); 
   };
+  const navigate = useNavigate();
+  const viewDetail = (id) => {
+    navigate(`/vaccine/detail/${id}`)
+  }
   return (
     <>
-      <div className="relative z-50">
-      <BaseHeader />
-      </div>
-      <div className="md:max-w-7xl mx-auto my-10">
-        <h1 className="text-2xl text-center font-bold mb-8">
-          Vaccine We Provided
-        </h1>
-        {/* Loading Spinner */}
-        {loading && (
-          <div className="flex justify-center my-10">
-            <span className="loading loading-spinner text-info"></span>
-          </div>
-        )}
-        {!loading && error && <p>Error: {error}</p>}
-        {vaccines.length === 0 && <p className="text-center">No vaccine has been added yet.</p>}
-        {!loading && (
-          <ul className="flex flex-wrap justify-center gap-4">
-            {vaccines.map((vaccine) => (
-              <div key={vaccine.id}>
-                <div className="card bg-base-100 w-96 shadow-xl">
-                  <figure className="px-10 pt-10">
-                    <img
-                      src={`${vaccine.vaccine_img}`}
-                      alt="vaccine_img"
-                      className="rounded-xl h-52"
-                      style={{ width: "304px" }}
-                    />
-                  </figure>
-                  <div className="card-body items-center text-center">
-                    <h2 className="card-title font-bold">
-                      {vaccine.vaccine_name}{" "}
-                    </h2>
-                    <p className="text-gray-600 font-semibold">
-                      Manufacturer: {vaccine.manufacturer}
-                    </p>
-                    <p className="h-10 mb-4">{vaccine.description} </p>
-                    <div className="card-actions">
-                      {doctor || patient ? (
-                        <>
-                          {patient?.user_type === "patient" && (
-                            <button
-                              onClick={() => handleBookNowClick(vaccine)}
-                              className="btn btn-primary"
-                            >
-                              Book Now
-                            </button>
-                          )}
-                          {doctor?.user_type === "doctor" && (
-                            <div className="flex gap-4">
-                              <button
-                                onClick={() => handleEditClick(vaccine)}
-                                className="text-white bg-blue-500 hover:bg-blue-700 w-20 py-3 rounded-md text-sm font-medium"
-                              >
-                                Edit
-                              </button>
-                              <button
-                                onClick={() => handleDelete(vaccine)}
-                                className="text-white bg-red-500 hover:bg-blue-700 w-20 py-3 rounded-md text-sm font-medium"
-                              >
-                                Delete
-                              </button>
-                            </div>
-                          )}
-                        </>
-                      ) : (
-                        <Link
-                          to="/login"
-                          className="text-white bg-blue-500 hover:bg-blue-700 w-full px-3 py-3 rounded-md text-sm font-medium"
-                        >
-                          Login to Book
-                        </Link>
-                      )}
-                    </div>
+      <div className="flex flex-col min-h-screen">
+        {/* Header */}
+        <div className="relative z-50">
+          <BaseHeader />
+        </div>
+
+        {/* Main Content - Takes remaining space */}
+        <div className="flex-grow flex">
+          <div className="md:max-w-7xl mx-auto my-10 px-4">
+            <h1 className="text-3xl text-center font-bold mb-8">Vaccines We Provide</h1>
+            <div className="flex flex-wrap md:flex-nowrap gap-6">
+              <aside className="w-full md:w-56 p-4 bg-base-100 shadow-xl rounded-lg">
+                <h3 className="text-lg font-semibold mb-4">Filter:</h3>
+                <label className="flex items-center gap-2 mb-4">
+                  <input
+                    type="radio"
+                    name="ageFilter"
+                    className="radio radio-primary"
+                    checked={filter === "adult"}
+                    onChange={() => setFilter("adult")}
+                  />
+                  <span>Adult</span>
+                </label>
+                <label className="flex items-center gap-2 mb-6">
+                  <input
+                    type="radio"
+                    name="ageFilter"
+                    className="radio radio-primary"
+                    checked={filter === "child"}
+                    onChange={() => setFilter("child")}
+                  />
+                  <span>Child</span>
+                </label>
+                <h3 className="text-lg font-semibold mb-4">Sort:</h3>
+                <select 
+                  className="select select-bordered mb-6"
+                  value={sort} 
+                  onChange={handleSortChange}
+                >
+                  <option value="#">Select Option</option>
+                  <option value="vaccine_name">Name</option>
+                  <option value="expiration_date">Date</option>
+                </select>
+                <button onClick={() => fetchVaccineData()} className="btn btn-primary w-full mb-4">
+                  Apply
+                </button>
+                <button onClick={() => resetfilet()} className="btn btn-outline-red w-full">
+                  Reset
+                </button>
+              </aside>
+
+              <div className="lg:w-[900px]">
+              <div className="flex justify-end items-center my-10">
+                  <h6 className="font-semibold text-2xl mr-4">Page:</h6>
+                  <div className="join">
+                    {Array.from({ length: pageCount }, (_, index) => (
+                      <input
+                        key={index + 1}
+                        className="join-item btn btn-square"
+                        type="radio"
+                        name="options"
+                        aria-label={index + 1}
+                        checked={page === index + 1}
+                        onChange={() => setPage(index + 1)}
+                      />
+                    ))}
                   </div>
                 </div>
-              </div>
-            ))}
-          </ul>
-        )}
-
-        {/* Booking Modal */}
-        {isBookingModalOpen && (
-          <dialog open className="modal">
-            <div className="modal-box">
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  handleBookingSubmit();
-                  e.target.reset();
-                  setIsBookingModalOpen(false);
-                  setRemainingDates([]); // Clear remaining dates
-                  setAppointmentDate("");
-                  setPatientName("");
-                  setPatientAge("");
-                }}
-              >
-                <button
-                  type="button"
-                  className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-                  onClick={() => {
-                    setIsBookingModalOpen(false);
-                    setRemainingDates([]); // Clear remaining dates
-                    setAppointmentDate("");
-                    setPatientName("");
-                    setPatientAge("");
-                  }}
-                >
-                  ✕
-                </button>
-                <h3 className="font-bold text-lg">
-                  Hello! {patient?.user?.first_name} {patient?.user?.last_name}
-                </h3>
-                <h6 className="font-semibold">
-                  Fill up this form to book an appointment.
-                </h6>
-                <label className="form-control w-full max-w-xs">
-                  <div className="label">
-                    <span className="label-text">Patient Name:</span>
+                {/* Loading Spinner */}
+                {loading && (
+                  <div className="flex justify-center w-full">
+                    <span className="loading loading-spinner text-info"></span>
                   </div>
-                  <input
-                    type="text"
-                    placeholder="Type here"
-                    className="input input-bordered w-full max-w-xs"
-                    onChange={(e) => setPatientName(e.target.value)}
-                    required
-                  />
-                </label>
-                <label className="form-control w-full max-w-xs">
-                  <div className="label">
-                    <span className="label-text">Patient Age:</span>
-                  </div>
-                  <input
-                    type="number"
-                    placeholder="Type here"
-                    className="input input-bordered w-full max-w-xs"
-                    onChange={(e) => setPatientAge(e.target.value)}
-                    required
-                  />
-                </label>
-                <label className="form-control w-full max-w-xs">
-                  <div className="label">
-                    <span className="label-text">Appointment Date:</span>
-                  </div>
-                  <input
-                    type="date"
-                    className="input input-bordered w-full max-w-xs"
-                    onChange={(e) => setAppointmentDate(e.target.value)}
-                    required
-                  />
-                </label>
-                <p className="font-medium text-sm pl-2 mt-4">
-                  Total Dose: {selectedVaccine.dose_count}{" "}
-                </p>
-                <div className="form-control w-full max-w-xs">
-                  <label className="label">
-                    <span className="label-text">Remaining Dose Dates: </span>
-                  </label>
-                  <ul className="pl-20">
-                    {selectedVaccine.dose_count > 1 ? (
-                      <div>
-                        {remainingDates.map((date, index) => (
-                          <li key={index}>
-                            {" "}
-                            {index + 2}st dose: {date}
-                          </li>
-                        ))}
+                )}
+                {!loading && error && <p className="text-center text-red-500">{`Error: ${error}`}</p>}
+                {vaccines.length === 0 && (
+                  <p className="text-center text-gray-500 w-full">No vaccines have been added yet.</p>
+                )}
+                {!loading && (
+                  <ul className="flex flex-wrap justify-center gap-4">
+                    {vaccines.map((vaccine) => (
+                      <div key={vaccine.id} className="w-full sm:w-72">
+                        <div className="card bg-base-100 shadow-xl">
+                          <button onClick={() => viewDetail(vaccine.id)}>
+                            <figure className="px-4 pt-4 ">
+                              <img
+                                src={vaccine.vaccine_img}
+                                alt="vaccine_img"
+                                className="rounded-xl h-52 w-full object-cover "
+                              />
+                            </figure>
+                          </button>
+                          <div className="card-body items-start text-start ">
+                            <h2 className="card-title font-bold text-lg h-12 flex justify-start items-start" > {vaccine?.vaccine_name} </h2>
+                            <p className="text-gray-600 font-semibold">{vaccine?.manufacturer}</p>
+                            <p className="text-gray-500" dangerouslySetInnerHTML={{__html: `${vaccine?.description?.slice(0,25)}...`}} ></p>
+                            <a href="#" className="text-blue-600" onClick={() => viewDetail(vaccine.id)}>Read More...</a>
+                          </div>
+                        </div>
                       </div>
-                    ) : (
-                      <p>Only one dose</p>
-                    )}
+                    ))}
                   </ul>
-                </div>
-                <div className="modal-action">
-                  <button type="submit" className="btn">
-                    Book Appointment
-                  </button>
-                </div>
-              </form>
+                )}
+                
+              </div>
             </div>
-          </dialog>
-        )}
+          </div>
+        </div>
 
-        {/* Edit Modal */}
-        {isEditModalOpen && (
-          <dialog open className="modal">
-            <div className="modal-box">
-              <form onSubmit={handleSubmit}>
-                <button
-                  type="button"
-                  className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-                  onClick={() => setIsEditModalOpen(false)}
-                >
-                  ✕
-                </button>
-                <h3 className="font-bold text-lg">Edit Vaccine Details</h3>
-                <label className="form-control w-full max-w-xs">
-                  <div className="label">
-                    <span className="label-text">Vaccine Name:</span>
-                  </div>
-                  <input
-                    type="text"
-                    name="vaccine_name"
-                    value={formData.vaccine_name}
-                    onChange={handleChange}
-                    required
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  />
-                </label>
-                <label className="form-control w-full max-w-xs">
-                  <div className="label">
-                    <span className="label-text">Slug:</span>
-                  </div>
-                  <input
-                    type="text"
-                    name="slug"
-                    value={formData.slug}
-                    onChange={handleChange}
-                    required
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  />
-                </label>
-                <label className="form-control w-full max-w-xs">
-                  <div className="label">
-                    <span className="label-text">Manufacturer:</span>
-                  </div>
-                  <input
-                    type="text"
-                    name="manufacturer"
-                    value={formData.manufacturer}
-                    onChange={handleChange}
-                    required
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  />
-                </label>
-                <label className="form-control w-full max-w-xs">
-                  <div className="label">
-                    <span className="label-text">Dosage:</span>
-                  </div>
-                  <input
-                    type="text"
-                    name="dosage"
-                    value={formData.dosage}
-                    onChange={handleChange}
-                    required
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  />
-                </label>
-                <label className="form-control w-full max-w-xs">
-                  <div className="label">
-                    <span className="label-text">Dose Count:</span>
-                  </div>
-                  <input
-                    type="number"
-                    name="dose_count"
-                    value={formData.dose_count}
-                    onChange={handleChange}
-                    required
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  />
-                </label>
-                <label className="form-control w-full max-w-xs">
-                  <div className="label">
-                    <span className="label-text">Dose Gap Days:</span>
-                  </div>
-                  <input
-                    type="number"
-                    name="dose_gap_days"
-                    value={formData.dose_gap_days}
-                    onChange={handleChange}
-                    required
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  />
-                </label>
-                <label className="form-control w-full max-w-xs">
-                  <div className="label">
-                    <span className="label-text">Storage Temperature:</span>
-                  </div>
-                  <input
-                    type="number"
-                    name="storage_temperature"
-                    value={formData.storage_temperature}
-                    onChange={handleChange}
-                    required
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  />
-                </label>
-                <label className="form-control w-full max-w-xs">
-                  <div className="label">
-                    <span className="label-text">Expiration Date:</span>
-                  </div>
-                  <input
-                    type="date"
-                    name="expiration_date"
-                    value={formData.expiration_date}
-                    onChange={handleChange}
-                    required
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  />
-                </label>
-                <label className="form-control w-full max-w-xs">
-                  <div className="label">
-                    <span className="label-text">Description:</span>
-                  </div>
-                  <textarea
-                    name="description"
-                    value={formData.description}
-                    onChange={handleChange}
-                    required
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  />
-                </label>
-                <label className="form-control w-full max-w-xs">
-                  <div className="label">
-                    <span className="label-text">Vaccine For:</span>
-                  </div>
-                  <input
-                    type="text"
-                    name="vaccine_for"
-                    value={formData.vaccine_for}
-                    onChange={handleChange}
-                    required
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  />
-                </label>
-                <label className="form-control w-full max-w-xs">
-                  <div className="label">
-                    <span className="label-text">Vaccine Type:</span>
-                  </div>
-                  <input
-                    type="text"
-                    name="vaccine_type"
-                    value={formData.vaccine_type}
-                    onChange={handleChange}
-                    required
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  />
-                </label>
-                <div className="modal-action">
-                  <button type="submit" className="btn">
-                    Save Changes
-                  </button>
-                </div>
-              </form>
-            </div>
-          </dialog>
-        )}
+
+        {/* Footer at Bottom */}
+        <BaseFooter />
       </div>
-      <BaseFooter />
     </>
   );
 };

@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import BaseFooter from "../../PartialComponent/BaseFooter";
 import BaseHeader from "../../PartialComponent/BaseHeader";
 import Banner from "./Banner/Banner";
@@ -12,6 +13,20 @@ import VaccineInfo from "./VaccineInfo/VaccineInfo";
 import VideoShowing from "./VideoShowing/VideoShowing";
 
 const Index = () => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 200) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
   return (
     <div className="relative">
       <div className="relative z-50">
@@ -23,13 +38,13 @@ const Index = () => {
           <ConsultationForm />
         </div>
       </div>
-      <div className="lg:mb-24">
+      <div className="lg:pt-20">
         <TestingServices />
       </div>
       <VideoShowing />
       <div className="md:relative lg:mb-56">
         <ImmunizationTips />
-        <div className="md:absolute md:-bottom-1/3 md:left-1/2 md:transform md:-translate-x-1/2 mb-4">
+        <div className="md:absolute md:-bottom-1/3 md:left-1/2 md:transform md:-translate-x-1/2 w-full lg:w-[1280px] mx-auto">
           <StepsSection />
         </div>
       </div>
@@ -38,6 +53,16 @@ const Index = () => {
       <DoctorInvite />
       <Newsletter />
       <BaseFooter />
+      {isVisible && (
+        <div className="fixed bottom-4 right-4">
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600 transition"
+          >
+            Back to Top
+          </button>
+        </div>
+      )}
     </div>
   );
 };

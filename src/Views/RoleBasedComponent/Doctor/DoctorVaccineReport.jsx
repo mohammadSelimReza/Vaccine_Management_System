@@ -8,24 +8,33 @@ const DoctorVaccineReport = () => {
   const [vaccineData, setVaccineData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const [pageCount,setPageCount] = useState(1);
+  const [page,setPage] = useState(1);
   // Fetch Vaccine Data
-  const fetchData = useCallback(async () => {
+  const fetchVaccineData = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      const res = await publicApiInstance.get("/vaccine/list/");
-      setVaccineData(res.data);
-    } catch (err) {
-      console.error("Error fetching vaccine data:", err);
-      setError("Failed to load vaccine data.");
-    } finally {
+      await publicApiInstance
+        .get(`/vaccine/list/?page=${page}`)
+        .then((response) => {
+          setVaccineData(response.data.results);
+          setPageCount(Math.ceil(response.data.count/6));
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("There was an error fetching the vaccine data!", error);
+          setLoading(false);
+        });
+    } catch (error) {
+      console.error("There was an error fetching the vaccine data!", error);
       setLoading(false);
     }
-  }, []);
+  }
   const navigate = useNavigate();
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    console.log(page);
+    fetchVaccineData();
+  }, [page]);
   const hadleEdit = (id) => {
     navigate(`/doctor/dashboard/vaccine/edit/${id}`);
   };
@@ -54,6 +63,21 @@ const DoctorVaccineReport = () => {
           <button className="btn btn-primary">
             <Link to="/doctor/dashboard/vaccine/add">Add Vaccine</Link>
           </button>
+        </div>
+        <div className="flex justify-end items-center my-10">
+          <div className="join">
+            {Array.from({ length: pageCount }, (_, index) => (
+              <input
+                key={index + 1}
+                className="join-item btn btn-square"
+                type="radio"
+                name="options"
+                aria-label={index + 1}
+                checked={page === index + 1}
+                onChange={() => setPage(index + 1)}
+              />
+            ))}
+          </div>
         </div>
         {/* Show Loading State */}
         {loading && <p className="text-center text-blue-500">Loading...</p>}

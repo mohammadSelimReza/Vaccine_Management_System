@@ -1,5 +1,4 @@
 import { Link, Outlet } from "react-router";
-import DashFooter from "./DashFooter";
 import DashSidebar from "./DashSidebar";
 
 const DoctorDashboardLayout = () => {
@@ -11,12 +10,11 @@ const DoctorDashboardLayout = () => {
         </div>
         <div className="flex-grow bg-gray-100">
           <Link to='/'>
-          <h1 className="text-center text-3xl md:text-4xl font-bold pt-10 md:pt-6">VacciHub</h1>
+          <h1 className="text-center mx-auto text-3xl md:text-4xl font-bold pt-10 md:pt-6 md:mb-10">VacciHub</h1>
           </Link>
           <Outlet />
         </div>
       </main>
-      <DashFooter />
     </div>
   );
 };

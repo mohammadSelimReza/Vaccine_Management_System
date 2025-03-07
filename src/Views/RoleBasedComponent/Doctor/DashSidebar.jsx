@@ -23,7 +23,7 @@ const DashSidebar = () => {
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
   }, [isOpen]);
-
+  console.log(doctor);
   return (
     <>
       {/* Mobile Hamburger Button */}
@@ -75,7 +75,7 @@ const DashSidebar = () => {
         {/* Profile Section */}
         <div className="p-5 flex items-center space-x-3 border-b border-gray-700">
           <img
-            src={doctor?.user?.image}
+            src={doctor?.user_photo}
             alt="User"
             className="w-10 h-10 rounded-full border border-gray-500"
           />

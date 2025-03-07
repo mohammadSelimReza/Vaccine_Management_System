@@ -2,12 +2,12 @@ import { Link, useNavigate } from "react-router-dom";
 import BaseHeader from "../PartialComponent/BaseHeader";
 import BaseFooter from "../PartialComponent/BaseFooter";
 import { useState } from "react";
-import { login, setUser } from "../../Utils/useAuth";
+import { handleDoctorLogin, handlePatientLogin, login, setUser } from "../../Utils/useAuth";
 import Toast from "../../plugin/useToast";
 
 function Login() {
-  const [username, setUsername] = useState([]);
-  const [password, setPassword] = useState([]);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [processing, setProcessing] = useState(false);
   const navigate = useNavigate();
   const handleLogin = async (e) => {
@@ -39,15 +39,8 @@ function Login() {
     setProcessing(true);
     try {
       console.log(JSON.stringify({ username, password }));
-      await login(username, password);
-      Toast().fire({
-        title: "You have logged in successfully",
-        icon: "success",
-      });
-
+      await handlePatientLogin();
       setProcessing(false);
-      setUsername("");
-      setPassword("");
       navigate("/");
     } catch (error) {
       Toast().fire({
@@ -57,24 +50,20 @@ function Login() {
       setProcessing(false);
     }
   };
+  console.log(username,password);
   const handleDoctor = async () => {
     // e.preventDefault();
     setProcessing(true);
+    setUsername("mreza");
+    setPassword("Django_project@2024");
     try {
-      setUsername("mreza");
-      setPassword("Django_project@2024");
-      await login(username, password);
-      Toast().fire({
-        title: "You have logged in successfully",
-        icon: "success",
-      });
-      setUsername("");
-      setPassword("");
+      console.log(JSON.stringify({ username, password }));
+      await handleDoctorLogin();
       setProcessing(false);
       navigate("/");
     } catch (error) {
       Toast().fire({
-        title: `${error}`,
+        title: `${error.response.data.detail}`,
         icon: "error",
       });
       setProcessing(false);

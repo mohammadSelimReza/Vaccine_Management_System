@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import "./Banner.css";
 const Banner = () => {
   return (
@@ -17,7 +18,7 @@ const Banner = () => {
             <span className="material-icons">call</span> +1-795-5582-795
           </button>
           <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
-            CONTACT US
+            <Link to='/about'>CONTACT US</Link>
           </button>
         </div>
       </div>

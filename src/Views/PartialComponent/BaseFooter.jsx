@@ -23,7 +23,7 @@ const BaseFooter = () => {
           </p>
         </div>
         <div className="space-y-4">
-          <nav className="flex flex-wrap justify-center lg:justify-start gap-4">
+          <nav className="flex flex-wrap justify-center gap-4">
             <a href="/" className="hover:text-gray-300">
               Home
             </a>

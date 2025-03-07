@@ -28,7 +28,7 @@ const VaccineAdd = () => {
     publicApiInstance
       .get("/vaccine/list/")
       .then((response) => {
-        setVaccines(response.data);
+        setVaccines(response.data.results);
       })
       .catch((error) => {
         console.error("There was an error fetching the vaccine data!", error);
@@ -65,7 +65,7 @@ const VaccineAdd = () => {
     setProcessing(true);
     console.log(JSON.stringify(formData));
     authApiInstance()
-      .post("/vaccine/list/", formData)
+      .post("/vaccine/add/", formData)
       .then((response) => {
         // Refresh the vaccine list after adding a new vaccine
         setVaccines([...vaccines, response.data]);

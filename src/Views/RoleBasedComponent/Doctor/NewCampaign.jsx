@@ -25,7 +25,7 @@ const CampaignAdd = () => {
     // Fetch vaccine data
     publicApiInstance
       .get("/vaccine/list/")
-      .then((response) => setVaccines(response.data))
+      .then((response) => setVaccines(response.data.results))
       .catch((error) =>
         console.error("There was an error fetching vaccines!", error)
       );
@@ -142,7 +142,7 @@ const CampaignAdd = () => {
     console.log("Form Data before submit:", JSON.stringify(formData));
     try {
       await authApiInstance()
-        .post("/vaccine/campaign/", formData)
+        .post("/vaccine/campaign-add/", formData)
         .then((res) => {
           setFormData({
             campaign_name: "",

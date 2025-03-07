@@ -28,7 +28,54 @@ export const login = async (username, password) => {
     return { data: null, error };
   }
 };
+export const handlePatientLogin = async () => {
+  try {
+    const { data, status } = await publicApiInstance.post(`/user/api/token/`, {
+      username:"srreza",
+      password:"Django_project@2025",
+    });
 
+    if (status === 200) {
+      await setAuthUser(data.access, data.refresh);
+      Toast().fire({
+        title: "Login from useAuth successfully",
+        icon: "success",
+      });
+    }
+    return { data, error: null };
+  } catch (error) {
+    console.log(error)
+    Toast().fire({
+      title: `${error}`,
+      icon: "error",
+    });
+    return { data: null, error };
+  }
+};
+export const handleDoctorLogin = async () => {
+  try {
+    const { data, status } = await publicApiInstance.post(`/user/api/token/`, {
+      username:"Mr_han",
+      password:"Django_Project_2025",
+    });
+
+    if (status === 200) {
+      await setAuthUser(data.access, data.refresh);
+      Toast().fire({
+        title: "Login from useAuth successfully",
+        icon: "success",
+      });
+    }
+    return { data, error: null };
+  } catch (error) {
+    console.log(error)
+    Toast().fire({
+      title: `${error.response.data.detail}`,
+      icon: "error",
+    });
+    return { data: null, error };
+  }
+};
 // Register a doctor
 export const doctorRegister = async (data) => {
   try {

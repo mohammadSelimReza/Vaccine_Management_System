@@ -34,16 +34,16 @@ const About = () => {
   return (
     <>
       <BaseHeader />
-      <div className="w-full mx-auto lg:w-3/4">
+      <div className="w-full mx-auto">
         {/* Hero Section */}
-        <section className="text-center py-20 bg-gradient-to-r from-blue-400 to-purple-500 text-white rounded-lg shadow-lg">
+        <section className="text-center py-20 bg-gradient-to-r from-blue-400 to-blue-500 text-white rounded-lg shadow-lg">
           <h1 className="text-4xl md:text-6xl font-bold mb-4">
             About Vaccine Hub
           </h1>
           <p className="text-lg md:text-xl mb-6">
             Your trusted partner for vaccine information and booking.
           </p>
-          <button className="bg-white text-purple-600 font-semibold py-2 px-6 rounded-lg hover:bg-gray-100 transition">
+          <button className="bg-white text-primary font-semibold py-2 px-6 rounded-lg hover:bg-gray-100 transition">
             Learn More
           </button>
         </section>
@@ -115,7 +115,7 @@ const About = () => {
         </section>
 
         {/* Contact Us */}
-        <section className="py-16 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg shadow-lg text-center">
+        <section className="py-16 bg-gradient-to-r from-blue-400 to-blue-500 text-white rounded-lg shadow-lg text-center">
           <h2 className="text-3xl font-bold mb-4">Get in Touch</h2>
           <p className="mb-6">
             Have any questions or feedback? Reach out to us and we'll be happy

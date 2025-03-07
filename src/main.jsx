@@ -29,6 +29,8 @@ import DoctorPassChange from "./Views/RoleBasedComponent/Doctor/DoctorPassUpdate
 import VaccineAdd from "./Views/RoleBasedComponent/Doctor/NewVaccine.jsx";
 import EditVaccine from "./Views/RoleBasedComponent/Doctor/EditVaccine.jsx";
 import CampaignAdd from "./Views/RoleBasedComponent/Doctor/NewCampaign.jsx";
+import VaccineDetail from "./Views/BaseComponent/Vaccine/VaccineDetail.jsx";
+import PrivateRoute from "./Layouts/ProtectedRoute.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -44,27 +46,96 @@ createRoot(document.getElementById("root")).render(
         <Route path="/login" element={<Login />}></Route>
         <Route path="/logout" element={<Logout />}></Route>
         <Route path="/vaccine/list" element={<Vaccine />}></Route>
+        <Route path="/vaccine/detail/:id" element={<VaccineDetail />}></Route>
         <Route path="/campaign/list" element={<Campaign />}></Route>
-        <Route path="/user/profile" element={<ProfileMain />}></Route>
+        <Route path="/user/profile" element={
+          <PrivateRoute>
+            <ProfileMain />
+          </PrivateRoute>
+        }></Route>
         <Route
           path="/user/change/password"
-          element={<PasswordChange />}
+          element={
+            <PrivateRoute>
+              <PasswordChange />
+            </PrivateRoute>
+          }
         ></Route>
-        <Route path="/user/update/name" element={<UserNameChange />}></Route>
-        <Route path="/user/update/profile" element={<UserBioUpdate />}></Route>
-        <Route path="/user/vaccine/report" element={<VaccineReport />}></Route>
-        <Route path="/user/capaign/report" element={<CampaignReport />}></Route>
-        <Route path="/doctor/dashboard" element={<DoctorDashboardLayout />}>
-          <Route path="state" element={<DoctorDashbord />} />
-          <Route path="vaccine/report" element={<DoctorVaccineReport />} />
-          <Route path="campaign/report" element={<DoctorCampaignDasboard />} />
-          <Route path="doctor/profile" element={<DoctorProfile />} />
-          <Route path="doctor/bio/update" element={<DoctorUpBio />} />
-          <Route path="doctor/name/update" element={<DoctorNameChange />} />
-          <Route path="doctor/pass/update" element={<DoctorPassChange />} />
-          <Route path="vaccine/add" element={<VaccineAdd />} />
-          <Route path="vaccine/edit/:id" element={<EditVaccine />} />
-          <Route path="campaign/add/" element={<CampaignAdd />} />
+        <Route path="/user/update/name" element={
+          <PrivateRoute>
+            <UserNameChange />
+          </PrivateRoute>
+        }></Route>
+        <Route path="/user/update/profile" element={
+          <PrivateRoute>
+            <UserBioUpdate />
+          </PrivateRoute>
+        }></Route>
+        <Route path="/user/vaccine/report" element={
+          <PrivateRoute>
+            <VaccineReport />
+          </PrivateRoute>
+        }></Route>
+        <Route path="/user/capaign/report" element={
+          <PrivateRoute>
+            <CampaignReport />
+          </PrivateRoute>
+        }></Route>
+        <Route path="/doctor/dashboard" element={
+          <PrivateRoute>
+            <DoctorDashboardLayout />
+          </PrivateRoute>
+        }>
+          <Route path="state" element={
+            <PrivateRoute>
+              <DoctorDashbord />
+            </PrivateRoute>
+          } />
+          <Route path="vaccine/report" element={
+            <PrivateRoute>
+              <DoctorVaccineReport />
+            </PrivateRoute>
+          } />
+          <Route path="campaign/report" element={
+            <PrivateRoute>
+              <DoctorCampaignDasboard />
+            </PrivateRoute>
+          } />
+          <Route path="doctor/profile" element={
+            <PrivateRoute>
+              <DoctorProfile />
+            </PrivateRoute>
+          } />
+          <Route path="doctor/bio/update" element={
+            <PrivateRoute>
+              <DoctorUpBio />
+            </PrivateRoute>
+          } />
+          <Route path="doctor/name/update" element={
+            <PrivateRoute>
+              <DoctorNameChange />
+            </PrivateRoute>
+          } />
+          <Route path="doctor/pass/update" element={
+            <PrivateRoute>
+              <DoctorPassChange />
+            </PrivateRoute>
+          } />
+          <Route path="vaccine/add" element={
+            <PrivateRoute>
+              <VaccineAdd />
+            </PrivateRoute>
+          } />
+          <Route path="vaccine/edit/:id" element={
+            <PrivateRoute>
+              <EditVaccine />
+            </PrivateRoute>
+          } />
+          <Route path="campaign/add/" element={
+            <PrivateRoute>
+              <CampaignAdd />
+            </PrivateRoute>
+          } />
 
         </Route>
         <Route path="*" element={<NotFound />}></Route>
