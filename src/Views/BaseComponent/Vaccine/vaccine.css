@@ -1,0 +1,7 @@
+.body{
+    background-color: black;
+}
+
+.radio-checked {
+    background-color: #2563eb !important; /* Tailwind's bg-blue-600 color */
+  }

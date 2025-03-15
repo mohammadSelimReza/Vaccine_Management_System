@@ -229,7 +229,7 @@ const VaccineDetail = () => {
       {/* Main Content - Takes remaining space */}
       <div className="flex-grow py-10">
         <div className="max-w-5xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-center md:justify-between items-center md:items-start">
+          <div className="flex justify-center items-center md:items-start">
             <div>
               <img
                 src={vaccine?.vaccine_img}
@@ -274,7 +274,11 @@ const VaccineDetail = () => {
                 )}
               </div>
             </div>
-            <div className="overflow-x-auto">
+            
+            <div>{/* Details Section */}</div>
+          </div>
+          <div className="mt-8">
+          <div className="overflow-x-auto mb-10">
               <h2 className="text-center md:text-start text-3xl font-bold md:mb-10">
                 {" "}
                 {vaccine?.vaccine_name}{" "}
@@ -351,9 +355,6 @@ const VaccineDetail = () => {
                 </tbody>
               </table>
             </div>
-            <div>{/* Details Section */}</div>
-          </div>
-          <div className="mt-8">
             <h3 className="text-lg font-bold">Vaccine Description:</h3>
             <p className="text-gray-900">{vaccine?.description}</p>
           </div>

@@ -6,3 +6,6 @@
     margin: 0;
     padding: 0;
 }
+.radio-checked {
+    background-color: #2563eb; /* Tailwind's bg-blue-600 color */
+  }

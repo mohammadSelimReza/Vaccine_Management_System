@@ -24,7 +24,7 @@ const VideoShowing = () => {
 
         {/* Right - Text Card */}
         <div className="w-full lg:w-1/2 bg-blue-50 p-6 rounded-xl shadow-md">
-          <h2 className="text-2xl font-semibold text-blue-700 mb-4">
+          <h2 className="text-2xl font-semibold text-blue-600 mb-4">
             Why Vaccination Matters?
           </h2>
           <p className="text-gray-700 leading-relaxed">

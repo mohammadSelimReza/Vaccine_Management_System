@@ -10,7 +10,7 @@ const DoctorDashboardLayout = () => {
         </div>
         <div className="flex-grow bg-gray-100">
           <Link to='/'>
-          <h1 className="text-center mx-auto text-3xl md:text-4xl font-bold pt-10 md:pt-6 md:mb-10">VacciHub</h1>
+          <h1 className="text-start mx-auto text-3xl md:text-4xl font-bold pl-40 md:pt-10">VacciHub</h1>
           </Link>
           <Outlet />
         </div>

@@ -100,13 +100,13 @@ const BaseHeader = () => {
               <>
                 <Link
                   to="/login"
-                  className="btn btn-primary lg:btn-md sm:btn-xs"
+                  className="btn bg-blue-600 text-white lg:btn-md sm:btn-xs"
                 >
                   Login
                 </Link>
                 <Link
                   to="/patient/register"
-                  className="btn btn-primary lg:btn-md sm:btn-xs"
+                  className="btn bg-blue-600 text-white lg:btn-md sm:btn-xs"
                 >
                   Register
                 </Link>

@@ -4,7 +4,7 @@ const ImmunizationTips = () => {
     <div className="section bg-base-100 py-12 px-6 md:px-16">
       {/* Heading */}
       <div className="text-center">
-        <h2 className="text-3xl font-bold text-primary">Immunization Tips</h2>
+        <h2 className="text-3xl font-bold text-blue-600">Immunization Tips</h2>
         <p className="text-gray-600 mt-2">
           Stay informed about vaccines to protect yourself and others from
           preventable diseases.
@@ -15,7 +15,7 @@ const ImmunizationTips = () => {
       <div className="relative flex flex-col items-center justify-center mt-10 md:flex-row md:flex-wrap md:gap-12">
         <div className=" grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8 md:mt-0 md:w-full md:h-auto md:relative lg:w-auto">
           <div className=" flex flex-col items-center text-center md:absolute md:bottom-16 md:-left-28">
-            <div className="p-4 rounded-full bg-primary text-white">
+            <div className="p-4 rounded-full bg-blue-600 text-white">
               <span className="text-2xl">💉</span>
             </div>
             <h3 className="font-bold text-lg mt-2">Safe & Effective</h3>
@@ -25,7 +25,7 @@ const ImmunizationTips = () => {
           </div>
 
           <div className=" flex flex-col items-center text-center md:absolute md:top-18 md:right-16">
-            <div className="p-4 rounded-full bg-primary text-white">
+            <div className="p-4 rounded-full bg-blue-600 text-white">
               <span className="text-2xl">🧪</span>
             </div>
             <h3 className="font-bold text-lg mt-2">Antibody Testing</h3>
@@ -46,7 +46,7 @@ const ImmunizationTips = () => {
         {/* Information Boxes (Grid for Mobile, Absolute for Large Screens) */}
         <div className=" grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8 md:mt-0 md:w-full md:h-auto md:relative lg:w-auto">
           <div className=" flex flex-col items-center text-center md:absolute md:bottom-6 md:right-18">
-            <div className="p-4 rounded-full bg-primary text-white">
+            <div className="p-4 rounded-full bg-blue-600 text-white">
               <span className="text-2xl">🛡️</span>
             </div>
             <h3 className="font-bold text-lg mt-2">Immunity Passports</h3>
@@ -55,7 +55,7 @@ const ImmunizationTips = () => {
             </p>
           </div>
           <div className=" flex flex-col items-center text-center md:absolute md:top-0 md:left-10">
-            <div className="p-4 rounded-full bg-primary text-white">
+            <div className="p-4 rounded-full bg-blue-600 text-white">
               <span className="text-2xl">🧤</span>
             </div>
             <h3 className="font-bold text-lg mt-2">Personal Protection</h3>

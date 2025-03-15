@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import publicApiInstance from "../../../Utils/publicApiInstance";
 import { Link, useNavigate } from "react-router";
 import authApiInstance from "../../../Utils/authApiInstance";
@@ -7,7 +7,7 @@ import Toast from "../../../plugin/useToast";
 const DoctorVaccineReport = () => {
   const [vaccineData, setVaccineData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error] = useState(null);
   const [pageCount,setPageCount] = useState(1);
   const [page,setPage] = useState(1);
   // Fetch Vaccine Data

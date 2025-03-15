@@ -14,7 +14,7 @@ const VaccineInfo = () => {
 
       {/* Text Content */}
       <div className="w-full md:w-1/2">
-        <h2 className="text-2xl md:text-3xl font-bold text-primary">
+        <h2 className="text-2xl md:text-3xl font-bold text-blue-600">
           COVID-19 Vaccines: How They Protect You
         </h2>
         <p className="text-gray-600 mt-4">
